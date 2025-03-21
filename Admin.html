@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DUT BookHaven Admin Dashboard</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #3498db;
+            --secondary: #2980b9;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --sidebar-width: 250px;
+        }
+
+        body {
+            background-color: #f5f7f9;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item i {
+            margin-right: 15px;
+            font-size: 1.2rem;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .menu-text {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: all 0.3s;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        .main-content.expanded {
+            margin-left: 70px;
+            width: calc(100% - 70px);
+        }
+
+        .topbar {
+            background-color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #f5f7f9;
+            border-radius: 20px;
+            padding: 5px 15px;
+            width: 300px;
+        }
+
+        .search-box input {
+            border: none;
+            background: none;
+            padding: 8px;
+            width: 100%;
+            outline: none;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .notification-icon {
+            margin-right: 20px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 30px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-info h4 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        table th {
+            background-color: #f5f7f9;
+            font-weight: 600;
+        }
+
+        table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-btn {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Recent Orders Table */
+        .status-pill {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-delivered {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Form Styles */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            animation: modalOpen 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        @keyframes modalOpen {
+            from {transform: scale(0.8); opacity: 0;}
+            to {transform: scale(1); opacity: 1;}
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+
+        .page-item {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .page-item:hover {
+            background-color: #f5f7f9;
+        }
+
+        .page-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Media Queries */
+        @media (max-width: 992px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                z-index: 100;
+            }
+
+            .sidebar.mobile-visible {
+                width: var(--sidebar-width);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .mobile-toggle {
+                display: block !important;
+            }
+
+            .search-box {
+                width: 200px;
+            }
+        }
+
+        /* Book Management Styles */
+        .book-image {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .book-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .book-details h4 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .book-details p {
+            margin: 5px 0 0;
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+
+        /* Inventory Status */
+        .stock-level {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+
+        .in-stock {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .low-stock {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .out-of-stock {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Dashboard specific elements */
+        .section-hidden {
+            display: none;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3>DUT BookHaven</h3>
+            <button class="toggle-btn" id="toggle-sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <a href="#dashboard" class="menu-item active" data-section="dashboard-section">
+            <i class="fas fa-tachometer-alt"></i>
+            <span class="menu-text">Dashboard</span>
+        </a>
+
+        <a href="#books" class="menu-item" data-section="books-section">
+            <i class="fas fa-book"></i>
+            <span class="menu-text">Books</span>
+        </a>
+
+        <a href="#orders" class="menu-item" data-section="orders-section">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="menu-text">Orders</span>
+        </a>
+
+        <a href="#users" class="menu-item" data-section="users-section">
+            <i class="fas fa-users"></i>
+            <span class="menu-text">Users</span>
+        </a>
+
+        <a href="#categories" class="menu-item" data-section="categories-section">
+            <i class="fas fa-tags"></i>
+            <span class="menu-text">Categories</span>
+        </a>
+
+        <a href="#discounts" class="menu-item" data-section="discounts-section">
+            <i class="fas fa-percent"></i>
+            <span class="menu-text">Discounts</span>
+        </a>
+
+        <a href="#reports" class="menu-item" data-section="reports-section">
+            <i class="fas fa-chart-bar"></i>
+            <span class="menu-text">Reports</span>
+        </a>
+
+        <a href="#settings" class="menu-item" data-section="settings-section">
+            <i class="fas fa-cog"></i>
+            <span class="menu-text">Settings</span>
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <button class="toggle-btn mobile-toggle" id="mobile-toggle" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search...">
+            </div>
+
+            <div class="user-actions">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+
+                <div class="user-info">
+                    <img src="/api/placeholder/40/40" alt="Admin Avatar">
+                    <span>Admin User</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section">
+                <h2>Dashboard Overview</h2>
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: var(--primary);">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>2,456</h4>
+                            <p>Total Books</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: var(--success);">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>352</h4>
+                            <p>New Orders</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: var(--warning);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>1,845</h4>
+                            <p>Active Users</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background-color: green;">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>R5634.00</h4>
+                            <p>Monthly Revenue</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">Recent Orders</h3>
+                            <button class="btn btn-primary">View All</button>
+                        </div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#ORD-1278</td>
+                                    <td>John Smith</td>
+                                    <td>Mar 18, 2025</td>
+                                    <td>R146.80</td>
+                                    <td><span class="status-pill status-delivered">Delivered</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
+                                            <span class="action-btn" style="background-color: var(--success);"><i class="fas fa-check"></i></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-1277</td>
+                                    <td>Emily Johnson</td>
+                                    <td>Mar 18, 2025</td>
+                                    <td>R789.25</td>
+                                    <td><span class="status-pill status-pending">Pending</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
+                                            <span class="action-btn" style="background-color: var(--success);"><i class="fas fa-check"></i></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-1276</td>
+                                    <td>Michael Brown</td>
+                                    <td>Mar 17, 2025</td>
+                                    <td>R212.50</td>
+                                    <td><span class="status-pill status-delivered">Delivered</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
+                                            <span class="action-btn" style="background-color: var(--success);"><i class="fas fa-check"></i></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-1275</td>
+                                    <td>Sarah Wilson</td>
+                                    <td>Mar 17, 2025</td>
+                                    <td>R365.30</td>
+                                    <td><span class="status-pill status-cancelled">Cancelled</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
+                                            <span class="action-btn" style="background-color: var(--warning);"><i class="fas fa-redo"></i></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-1274</td>
+                                    <td>David Taylor</td>
+                                    <td>Mar 16, 2025</td>
+                                    <td>R178.40</td>
+                                    <td><span class="status-pill status-delivered">Delivered</span></td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
+                                            <span class="action-btn" style="background-color: var(--success);"><i class="fas fa-check"></i></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div>
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3 class="panel-title">Low Stock Alert</h3>
+                                <button class="btn btn-primary">View All</button>
+                            </div>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Book</th>
+                                        <th>Quantity</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Introduction to Psychology</td>
+                                        <td><span class="stock-level low-stock">5</span></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">Restock</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Calculus II</td>
+                                        <td><span class="stock-level low-stock">3</span></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">Restock</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Modern Physics</td>
+                                        <td><span class="stock-level out-of-stock">0</span></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">Restock</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>World Literature</td>
+                                        <td><span class="stock-level low-stock">2</span></td>
+                                        <td>
+                                            <button class="btn btn-primary btn-sm">Restock</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h3 class="panel-title">Popular Books</h3>
+                            </div>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Sales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+
+                                        <td>Introduction to Computer Science</td>
+                                        <td>245</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Business Management</td>
+                                        <td>198</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Calculus I</td>
+                                        <td>176</td>
+                                    </tr>
+                                    <tr>
+                                        <td>English Composition</td>
+                                        <td>154</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Books Section -->
+            <div id="books-section" class="section-hidden">
+                <div class="panel-header">
+                    <h2>Book Management</h2>
+                    <button class="btn btn-primary" id="add-book-btn">Add New Book</button>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="search-box" style="width: 300px;">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="book-search" placeholder="Search books...">
+                        </div>
+
+                        <div>
+                            <select class="form-control" style="width: auto; display: inline-block;">
+                                <option>All Categories</option>
+                                <option>Computer Science</option>
+                                <option>Mathematics</option>
+                                <option>Physics</option>
+                                <option>Biology</option>
+                                <option>Business</option>
+                                <option>Literature</option>
+                            </select>
+
+                            <select class="form-control" style="width: auto; display: inline-block; margin-left: 10px;">
+                                <option>Sort By: Newest</option>
+                                <option>Sort By: Name (A-Z)</option>
+                                <option>Sort By: Price (Low-High)</option>
+                                <option>Sort By: Price (High-Low)</option>
+                                <option>Sort By: Stock</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Book</th>
+                                <th>ISBN</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="book-info">
+                                        <img src="/api/placeholder/60/80" alt="Book Cover" class="book-image">
+                                        <div class="book-details">
+                                            <h4>Introduction to Computer Science</h4>
+                                            <p>by John Doe</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>978-3-16-148410-0</td>
+                                <td>Computer Science</td>
+                                <td>R289.99</td>
+                                <td><span class="stock-level in-stock">125</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
+                                        <span class="action-btn" style="background-color: var(--warning);"><i class="fas fa-edit"></i></span>
+                                        <span class="action-btn" style="background-color: var(--danger);"><i class="fas fa-trash"></i></span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="book-info">
+                                        <img src="/api/placeholder/60/80" alt="Book Cover" class="book-image">
+                                        <div class="book-details">
+                                            <h4>Calculus I</h4>
+                                            <p>by Sarah Johnson</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>978-0-13-110362-7</td>
+                                <td>Mathematics</td>
+
+                                <script type="text/javascript">
+                                  // DOM Elements
+document.addEventListener('DOMContentLoaded', function() {
+    // Sidebar Toggle
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
+    const toggleSidebar = document.getElementById('toggle-sidebar');
+    const mobileToggle = document.getElementById('mobile-toggle');
+
+    // Section Navigation
+    const menuItems = document.querySelectorAll('.menu-item');
+    const sections = document.querySelectorAll('[id$="-section"]');
+
+    // Books Management
+    const addBookBtn = document.getElementById('add-book-btn');
+    const bookSearchInput = document.getElementById('book-search');
+
+    // Modal Variables
+    let currentModal = null;
+
+    // Toggle Sidebar for Desktop
+    toggleSidebar.addEventListener('click', function() {
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('expanded');
+    });
+
+    // Toggle Sidebar for Mobile
+    if (mobileToggle) {
+        mobileToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('mobile-visible');
+        });
+    }
+
+    // Handle Section Navigation
+    menuItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Update active menu item
+            menuItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+
+            // Show corresponding section
+            const targetSection = this.getAttribute('data-section');
+            sections.forEach(section => {
+                section.classList.add('section-hidden');
+                if (section.id === targetSection) {
+                    section.classList.remove('section-hidden');
+                }
+            });
+
+            // Close sidebar on mobile after navigation
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('mobile-visible');
+            }
+        });
+    });
+
+    // Modal Functions
+    function createModal(title, content, onSave = null) {
+        // Create modal structure
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
+
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>${title}</h3>
+                    <span class="close-btn">&times;</span>
+                </div>
+                <div class="modal-body">
+                    ${content}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary save-btn">Save</button>
+                    <button class="btn cancel-btn">Cancel</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+        currentModal = modal;
+
+        // Show the modal
+        setTimeout(() => {
+            modal.style.display = 'flex';
+        }, 10);
+
+        // Close button functionality
+        const closeBtn = modal.querySelector('.close-btn');
+        const cancelBtn = modal.querySelector('.cancel-btn');
+        const saveBtn = modal.querySelector('.save-btn');
+
+        closeBtn.addEventListener('click', () => closeModal());
+        cancelBtn.addEventListener('click', () => closeModal());
+        saveBtn.addEventListener('click', () => {
+            if (onSave) {
+                onSave();
+            }
+            closeModal();
+        });
+
+        // Close when clicking outside
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        return modal;
+    }
+
+    function closeModal() {
+        if (currentModal) {
+            currentModal.style.display = 'none';
+            document.body.removeChild(currentModal);
+            currentModal = null;
+        }
+    }
+
+    // Add Book Modal
+    if (addBookBtn) {
+        addBookBtn.addEventListener('click', function() {
+            const modalContent = `
+                <form id="add-book-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="book-title">Book Title</label>
+                            <input type="text" class="form-control" id="book-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="book-isbn">ISBN</label>
+                            <input type="text" class="form-control" id="book-isbn" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="book-author">Author</label>
+                            <input type="text" class="form-control" id="book-author" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="book-category">Category</label>
+                            <select class="form-control" id="book-category" required>
+                                <option value="">Select Category</option>
+                                <option value="Computer Science">Computer Science</option>
+                                <option value="Mathematics">Mathematics</option>
+                                <option value="Physics">Physics</option>
+                                <option value="Biology">Biology</option>
+                                <option value="Business">Business</option>
+                                <option value="Literature">Literature</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="book-price">Price ($)</label>
+                            <input type="number" step="0.01" min="0" class="form-control" id="book-price" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="book-stock">Stock Quantity</label>
+                            <input type="number" min="0" class="form-control" id="book-stock" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-description">Description</label>
+                        <textarea class="form-control" id="book-description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-cover">Cover Image</label>
+                        <input type="file" class="form-control" id="book-cover">
+                    </div>
+                </form>
+            `;
+
+            createModal('Add New Book', modalContent, saveBook);
+        });
+    }
+
+    // Save Book Function
+    function saveBook() {
+        // In a real application, this would send data to a server
+        // For this demo, we'll just add a new row to the table
+        const bookTitle = document.getElementById('book-title').value;
+        const bookAuthor = document.getElementById('book-author').value;
+        const bookISBN = document.getElementById('book-isbn').value;
+        const bookCategory = document.getElementById('book-category').value;
+        const bookPrice = document.getElementById('book-price').value;
+        const bookStock = document.getElementById('book-stock').value;
+
+        if (!bookTitle || !bookAuthor || !bookISBN || !bookCategory || !bookPrice || !bookStock) {
+            return;
+        }
+
+        // Find the books table
+        const booksTable = document.querySelector('#books-section table tbody');
+        if (!booksTable) return;
+
+        // Create a new row
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>
+                <div class="book-info">
+                    <img src="/api/placeholder/60/80" alt="Book Cover" class="book-image">
+                    <div class="book-details">
+                        <h4>${bookTitle}</h4>
+                        <p>by ${bookAuthor}</p>
+                    </div>
+                </div>
+            </td>
+            <td>${bookISBN}</td>
+            <td>${bookCategory}</td>
+            <td>$${parseFloat(bookPrice).toFixed(2)}</td>
+            <td><span class="stock-level ${parseInt(bookStock) > 10 ? 'in-stock' : parseInt(bookStock) > 0 ? 'low-stock' : 'out-of-stock'}">${bookStock}</span></td>
+            <td>
+                <div class="action-buttons">
+                    <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
+                    <span class="action-btn" style="background-color: var(--warning);"><i class="fas fa-edit"></i></span>
+                    <span class="action-btn" style="background-color: var(--danger);"><i class="fas fa-trash"></i></span>
+                </div>
+            </td>
+        `;
+
+        // Add event listeners to the new action buttons
+        const viewBtn = newRow.querySelector('.action-btn:nth-child(1)');
+        const editBtn = newRow.querySelector('.action-btn:nth-child(2)');
+        const deleteBtn = newRow.querySelector('.action-btn:nth-child(3)');
+
+        viewBtn.addEventListener('click', function() {
+            viewBook(bookTitle, bookAuthor, bookISBN, bookCategory, bookPrice, bookStock);
+        });
+
+        editBtn.addEventListener('click', function() {
+            editBook(newRow, bookTitle, bookAuthor, bookISBN, bookCategory, bookPrice, bookStock);
+        });
+
+        deleteBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to delete this book?')) {
+                booksTable.removeChild(newRow);
+                showNotification('Book deleted successfully', 'success');
+            }
+        });
+
+        // Add the row to the table
+        booksTable.prepend(newRow);
+
+        // Show success notification
+        showNotification('Book added successfully', 'success');
+    }
+
+    // View Book Details
+    function viewBook(title, author, isbn, category, price, stock) {
+        const modalContent = `
+            <div class="book-details-view">
+                <div class="book-details-header">
+                    <img src="/api/placeholder/120/160" alt="Book Cover" style="border-radius: 4px; margin-right: 20px;">
+                    <div>
+                        <h2>${title}</h2>
+                        <p><strong>Author:</strong> ${author}</p>
+                        <p><strong>ISBN:</strong> ${isbn}</p>
+                        <p><strong>Category:</strong> ${category}</p>
+                        <p><strong>Price:</strong> $${parseFloat(price).toFixed(2)}</p>
+                        <p><strong>Stock:</strong> ${stock} units</p>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h4>Description</h4>
+                    <p>This is a placeholder description for the book. In a real application, this would contain the actual book description.</p>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h4>Sales History</h4>
+                    <p>Total Sales: 158 copies</p>
+                    <p>Revenue: $${(parseFloat(price) * 158).toFixed(2)}</p>
+                </div>
+            </div>
+        `;
+
+        const modal = createModal('Book Details', modalContent);
+
+        // Change the footer to just have a close button
+        const footer = modal.querySelector('.modal-footer');
+        footer.innerHTML = '<button class="btn">Close</button>';
+        footer.querySelector('.btn').addEventListener('click', closeModal);
+    }
+
+    // Edit Book
+    function editBook(row, title, author, isbn, category, price, stock) {
+        const modalContent = `
+            <form id="edit-book-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-book-title">Book Title</label>
+                        <input type="text" class="form-control" id="edit-book-title" value="${title}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-book-isbn">ISBN</label>
+                        <input type="text" class="form-control" id="edit-book-isbn" value="${isbn}" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-book-author">Author</label>
+                        <input type="text" class="form-control" id="edit-book-author" value="${author}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-book-category">Category</label>
+                        <select class="form-control" id="edit-book-category" required>
+                            <option value="Computer Science" ${category === 'Computer Science' ? 'selected' : ''}>Computer Science</option>
+                            <option value="Mathematics" ${category === 'Mathematics' ? 'selected' : ''}>Mathematics</option>
+                            <option value="Physics" ${category === 'Physics' ? 'selected' : ''}>Physics</option>
+                            <option value="Biology" ${category === 'Biology' ? 'selected' : ''}>Biology</option>
+                            <option value="Business" ${category === 'Business' ? 'selected' : ''}>Business</option>
+                            <option value="Literature" ${category === 'Literature' ? 'selected' : ''}>Literature</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-book-price">Price ($)</label>
+                        <input type="number" step="0.01" min="0" class="form-control" id="edit-book-price" value="${price}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-book-stock">Stock Quantity</label>
+                        <input type="number" min="0" class="form-control" id="edit-book-stock" value="${stock}" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="edit-book-description">Description</label>
+                    <textarea class="form-control" id="edit-book-description">This is a placeholder description for the book.</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="edit-book-cover">Cover Image</label>
+                    <input type="file" class="form-control" id="edit-book-cover">
+                </div>
+            </form>
+        `;
+
+        createModal('Edit Book', modalContent, function() {
+            updateBook(row);
+        });
+    }
+
+    // Update Book
+    function updateBook(row) {
+        const bookTitle = document.getElementById('edit-book-title').value;
+        const bookAuthor = document.getElementById('edit-book-author').value;
+        const bookISBN = document.getElementById('edit-book-isbn').value;
+        const bookCategory = document.getElementById('edit-book-category').value;
+        const bookPrice = document.getElementById('edit-book-price').value;
+        const bookStock = document.getElementById('edit-book-stock').value;
+
+        if (!bookTitle || !bookAuthor || !bookISBN || !bookCategory || !bookPrice || !bookStock) {
+            return;
+        }
+
+        // Update the row with new values
+        row.querySelector('.book-details h4').textContent = bookTitle;
+        row.querySelector('.book-details p').textContent = `by ${bookAuthor}`;
+        row.querySelectorAll('td')[1].textContent = bookISBN;
+        row.querySelectorAll('td')[2].textContent = bookCategory;
+        row.querySelectorAll('td')[3].textContent = `$${parseFloat(bookPrice).toFixed(2)}`;
+
+        const stockElement = row.querySelectorAll('td')[4].querySelector('.stock-level');
+        stockElement.textContent = bookStock;
+        stockElement.className = 'stock-level';
+        stockElement.classList.add(parseInt(bookStock) > 10 ? 'in-stock' : parseInt(bookStock) > 0 ? 'low-stock' : 'out-of-stock');
+
+        // Show success notification
+        showNotification('Book updated successfully', 'success');
+    }
+
+    // Notification System
+    function showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-times-circle' : 'fa-info-circle'}"></i>
+                <span>${message}</span>
+            </div>
+            <button class="notification-close">&times;</button>
+        `;
+
+        // Add styles if not already in the document
+        if (!document.getElementById('notification-styles')) {
+            const styleEl = document.createElement('style');
+            styleEl.id = 'notification-styles';
+            styleEl.textContent = `
+                .notification {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+                    z-index: 1000;
+                    min-width: 300px;
+                    max-width: 500px;
+                    animation: slideIn 0.3s ease;
+                }
+
+                .notification-content {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .notification-content i {
+                    margin-right: 10px;
+                    font-size: 1.2rem;
+                }
+
+                .notification-success {
+                    background-color: #d4edda;
+                    color: #155724;
+                    border-left: 4px solid #28a745;
+                }
+
+                .notification-error {
+                    background-color: #f8d7da;
+                    color: #721c24;
+                    border-left: 4px solid #dc3545;
+                }
+
+                .notification-info {
+                    background-color: #cce5ff;
+                    color: #004085;
+                    border-left: 4px solid #007bff;
+                }
+
+                .notification-close {
+                    background: none;
+                    border: none;
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    color: inherit;
+                    margin-left: 10px;
+                }
+
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+            `;
+            document.head.appendChild(styleEl);
+        }
+
+        // Add to document
+        document.body.appendChild(notification);
+
+        // Close button functionality
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.addEventListener('click', function() {
+            document.body.removeChild(notification);
+        });
+
+        // Auto close after 5 seconds
+        setTimeout(function() {
+            if (document.body.contains(notification)) {
+                document.body.removeChild(notification);
+            }
+        }, 5000);
+    }
+
+    // Book Search Functionality
+    if (bookSearchInput) {
+        bookSearchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const booksTable = document.querySelector('#books-section table tbody');
+            if (!booksTable) return;
+
+            const rows = booksTable.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                const title = row.querySelector('.book-details h4').textContent.toLowerCase();
+                const author = row.querySelector('.book-details p').textContent.toLowerCase();
+                const isbn = row.querySelectorAll('td')[1].textContent.toLowerCase();
+                const category = row.querySelectorAll('td')[2].textContent.toLowerCase();
+
+                if (title.includes(searchTerm) || author.includes(searchTerm) || isbn.includes(searchTerm) || category.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    }
+
+    // Initialize action buttons for existing books
+    function initializeActionButtons() {
+        const bookRows = document.querySelectorAll('#books-section table tbody tr');
+
+        bookRows.forEach(row => {
+            const viewBtn = row.querySelector('.action-btn:nth-child(1)');
+            const editBtn = row.querySelector('.action-btn:nth-child(2)');
+            const deleteBtn = row.querySelector('.action-btn:nth-child(3)');
+
+            if (viewBtn) {
+                viewBtn.addEventListener('click', function() {
+                    const title = row.querySelector('.book-details h4').textContent;
+                    const author = row.querySelector('.book-details p').textContent.replace('by ', '');
+                    const isbn = row.querySelectorAll('td')[1].textContent;
+                    const category = row.querySelectorAll('td')[2].textContent;
+                    const price = row.querySelectorAll('td')[3].textContent.replace('$', '');
+                    const stock = row.querySelectorAll('td')[4].querySelector('.stock-level').textContent;
+
+                    viewBook(title, author, isbn, category, price, stock);
+                });
+            }
+
+            if (editBtn) {
+                editBtn.addEventListener('click', function() {
+                    const title = row.querySelector('.book-details h4').textContent;
+                    const author = row.querySelector('.book-details p').textContent.replace('by ', '');
+                    const isbn = row.querySelectorAll('td')[1].textContent;
+                    const category = row.querySelectorAll('td')[2].textContent;
+                    const price = row.querySelectorAll('td')[3].textContent.replace('$', '');
+                    const stock = row.querySelectorAll('td')[4].querySelector('.stock-level').textContent;
+
+                    editBook(row, title, author, isbn, category, price, stock);
+                });
+            }
+
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function() {
+                    if (confirm('Are you sure you want to delete this book?')) {
+                        row.parentNode.removeChild(row);
+                        showNotification('Book deleted successfully', 'success');
+                    }
+                });
+            }
+        });
+    }
+
+    // Initialize Orders Section
+    function initializeOrdersSection() {
+        // Add event listeners to order view buttons
+        const orderViewBtns = document.querySelectorAll('#dashboard-section .action-btn:nth-child(1)');
+
+        orderViewBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('tr');
+                const orderId = row.querySelectorAll('td')[0].textContent;
+                const customer = row.querySelectorAll('td')[1].textContent;
+                const date = row.querySelectorAll('td')[2].textContent;
+                const amount = row.querySelectorAll('td')[3].textContent;
+                const status = row.querySelectorAll('td')[4].querySelector('.status-pill').textContent;
+
+                viewOrder(orderId, customer, date, amount, status);
+            });
+        });
+    }
+
+    // View Order
+    function viewOrder(orderId, customer, date, amount, status) {
+        const modalContent = `
+            <div class="order-details">
+                <div class="order-info">
+                    <div class="info-row">
+                        <span class="info-label">Order ID:</span>
+                        <span class="info-value">${orderId}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Customer:</span>
+                        <span class="info-value">${customer}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Date:</span>
+                        <span class="info-value">${date}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Status:</span>
+                        <span class="info-value">
+                            <span class="status-pill status-${status.toLowerCase()}">${status}</span>
+                        </span>
+                    </div>
+                </div>
+
+                <h4 style="margin-top: 20px;">Order Items</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Introduction to Computer Science</td>
+                            <td>$89.99</td>
+                            <td>1</td>
+                            <td>$89.99</td>
+                        </tr>
+                        <tr>
+                            <td>Calculus I</td>
+                            <td>$79.99</td>
+                            <td>1</td>
+                            <td>$79.99</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" style="text-align: right;"><strong>Subtotal:</strong></td>
+                            <td>$169.98</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align: right;"><strong>Tax:</strong></td>
+                            <td>$13.60</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align: right;"><strong>Total:</strong></td>
+                            <td><strong>${amount}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <h4 style="margin-top: 20px;">Customer Information</h4>
+                <div class="customer-info">
+                    <div class="info-col">
+                        <h5>Billing Address</h5>
+                        <p>${customer}<br>
+                        123 University Ave<br>
+                        College Town, CA 90210<br>
+                        USA</p>
+                    </div>
+                    <div class="info-col">
+                        <h5>Payment Information</h5>
+                        <p>Payment Method: Credit Card<br>
+                        Card: **** **** **** 4242<br>
+                        Expiry: 05/26</p>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Add some styles for this modal
+        const styleEl = document.createElement('style');
+        if (!document.getElementById('order-styles')) {
+            styleEl.id = 'order-styles';
+            styleEl.textContent = `
+                .order-info {
+                    background-color: #f5f7f9;
+                    padding: 15px;
+                    border-radius: 4px;
+                    margin-bottom: 20px;
+                }
+
+                .info-row {
+                    display: flex;
+                    margin-bottom: 10px;
+                }
+
+                .info-label {
+                    font-weight: 600;
+                    width: 100px;
+                }
+
+                .customer-info {
+                    display: flex;
+                    gap: 30px;
+                }
+
+                .info-col {
+                    flex: 1;
+                }
+
+                .info-col h5 {
+                    margin-top: 0;
+                    margin-bottom: 10px;
+                }
+            `;
+            document.head.appendChild(styleEl);
+        }
+
+        const modal = createModal('Order Details', modalContent);
+
+        // Change the footer to include status update buttons
+        const footer = modal.querySelector('.modal-footer');
+        footer.innerHTML = `
+            <button class="btn btn-success">Mark as Delivered</button>
+            <button class="btn btn-danger">Cancel Order</button>
+            <button class="btn">Close</button>
+        `;
+
+        footer.querySelector('.btn-success').addEventListener('click', function() {
+            showNotification('Order marked as delivered', 'success');
+            closeModal();
+        });
+
+        footer.querySelector('.btn-danger').addEventListener('click', function() {
+            showNotification('Order cancelled', 'error');
+            closeModal();
+        });
+
+        footer.querySelector('.btn:last-child').addEventListener('click', closeModal);
+    }
+
+    // Initialize the page
+    initializeActionButtons();
+    initializeOrdersSection();
+
+    // Handle initial section visibility
+    window.addEventListener('hashchange', handleUrlHash);
+    handleUrlHash();
+
+    function handleUrlHash() {
+        const hash = window.location.hash;
+        if (hash) {
+            const targetMenuItem = document.querySelector(`.menu-item[href="${hash}"]`);
+            if (targetMenuItem) {
+                // Trigger a click on the corresponding menu item
+                targetMenuItem.click();
+            }
+        }
+    }
+
+    // Handle responsive behavior
+    window.addEventListener('resize', function() {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.remove('collapsed');
+            sidebar.classList.remove('mobile-visible');
+            mainContent.classList.remove('expanded');
+        }
+    });
+});
+
+                                </script>
