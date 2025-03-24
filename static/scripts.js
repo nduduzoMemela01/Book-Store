@@ -22,14 +22,14 @@ async function login() {
     });
 }
 
-// OTP verification
-function verifyOTP() {
-    let enteredOTP = document.getElementById("otp").value;
-    if (enteredOTP == otp) {
-        alert("OTP verified successfully!");
-        // Redirect to next page (can be a dashboard or another page)
-        window.location.href = "dashboard.html";
-    } else {
-        alert("Invalid OTP. Please try again.");
-    }
-}
+// // OTP verification
+// function verifyOTP() {
+//     let enteredOTP = document.getElementById("otp").value;
+//     if (enteredOTP == otp) {
+//         alert("OTP verified successfully!");
+//         // Redirect to next page (can be a dashboard or another page)
+//         window.location.href = "dashboard.html";
+//     } else {
+//         alert("Invalid OTP. Please try again.");
+//     }
+

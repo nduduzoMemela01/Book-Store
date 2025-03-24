@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Bookstore</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='cart.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Your Shopping Cart</h1>
+    </header>
+    
+    <main>
+        {% if cart %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Author</th>
+                        <th>Price (R)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for book in cart %}
+                        <tr>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.author }}</td>
+                            <td>R{{ book.price }}</td>
+                            <td>
+                                <form action="{{ url_for('remove_from_cart', book_id=book.id) }}" method="POST">
+                                    <button type="submit">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2>Total Price: R{{ total }}</h2>
+
+            <form action="{{ url_for('reserve') }}" method="POST">
+                <label for="email">Enter Your Email:</label>
+                <input type="email" name="email" id="email" required>
+
+                <label for="initials">Enter Your Initials:</label>
+                <input type="text" name="initials" id="initials" required>
+
+                <button type="submit">Reserve Books</button>
+            </form>
+        {% else %}
+            <p>Your cart is empty.</p>
+            <a href="/">Browse Books</a>
+        {% endif %}
+    </main>
+</body>
+</html>
