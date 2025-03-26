@@ -3,285 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop Books - DUT BookHaven</title>
-
+    <title>Book Store</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='stylebook.css') }}">
-
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-
-    <!-- Header Section -->
     <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo"><a href="index.html">DUT BookHaven</a></div>
-
-                <nav>
-                    <ul>
-                        <li><a href="BkStore.html">Home</a></li>
-                        <li><a href="BkStore.html#categories-section">Categories</a></li>
-                        <li><a href="shop.html" class="active">Shop</a></li>
-                        <li><a href="signin.html">Sign In</a></li>
-                        <li><a href="cart.html">Cart (<span id="cart-count">0</span>)</a></li>
-                    </ul>
-                </nav>
-                <button class="menu-toggle" id="menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
-        </div>
+        <h1>Book Store</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/cart">Cart (<span id="cart-count">0</span>)</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <!-- ShopPage -->
     <section class="page-content">
         <div class="container">
             <div class="shop-header">
-                <h1>Browse Our Collection</h1>
-                <div class="shop-controls">
-                    <div class="search-filters">
-                        <div class="advanced-search">
-                            <input type="text" placeholder="Search our entire book collection..." class="shop-search">
-                            <button class="search-btn"><i class="fas fa-search"></i></button>
-                        </div>
-                    </div>
-                    <div class="sort-filter">
-                        <select id="sort-by" class="form-control">
-                            <option value="relevance">Sort by: Relevance</option>
-                            <option value="price-low">Price: Low to High</option>
-                            <option value="price-high">Price: High to Low</option>
-                            <option value="newest">Newest Arrivals</option>
-                            <option value="bestselling">Bestselling</option>
-                        </select>
-                    </div>
-                </div>
+                <input type="text" id="search-input" placeholder="Search by title, author, or book ID">
+                <button id="search-btn">Search</button>
+                <button id="bestseller-btn">Bestsellers</button>
             </div>
 
-            <div class="shop-content">
-                <div class="shop-sidebar">
-                    <div class="filter-section">
-                        <h3>Categories</h3>
-                        <ul class="filter-list">
-                            <li>
-                                <input type="checkbox" id="Acc" class="filter-checkbox">
-                                <label for="Acc">Accounting and Informatics</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="Applied" class="filter-checkbox">
-                                <label for="Applied">Applied Sciences</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="Arts" class="filter-checkbox">
-                                <label for="Arts">Arts and Design</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="Eng" class="filter-checkbox">
-                                <label for="Eng">Engineering and Built Environment</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="Health" class="filter-checkbox">
-                                <label for="Health">Health Sciences</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="Management" class="filter-checkbox">
-                                <label for="Management">Management</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="Others" class="filter-checkbox">
-                                <label for="Others">Others</label>
-                            </li>
-                        </ul>
-                    </div>
+            <div class="shop-sidebar">
+                <h3>Categories</h3>
+                <ul>
+                    <li><button class="faculty-btn" data-faculty="Accounting and Informatics">Accounting and Informatics</button></li>
+                    <li><button class="faculty-btn" data-faculty="Applied Sciences">Applied Sciences</button></li>
+                    <li><button class="faculty-btn" data-faculty="Arts and Design">Arts and Design</button></li>
+                    <li><button class="faculty-btn" data-faculty="Engineering and Built Environment">Engineering and Built Environment</button></li>
+                    <li><button class="faculty-btn" data-faculty="Health Sciences">Health Sciences</button></li>
+                    <li><button class="faculty-btn" data-faculty="Management">Management</button></li>
+                    <li><button class="faculty-btn" data-faculty="Others">Others</button></li>
+                </ul>
+            </div>
 
-                    <div class="filter-section">
-                        <h3>Price Range</h3>
-                        <div class="price-slider">
-                            <input type="range" min="0" max="1000" value="500" class="slider" id="price-range">
-                            <div class="price-inputs">
-                                <div>R0</div>
-                                <div id="price-value">R500</div>
-                                <div>R1000</div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="book-grid">
+                <!-- Books will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
 
-                    <div class="filter-section">
-                        <h3>Author</h3>
-                        <input type="text" placeholder="Search authors..." class="author-search form-control">
-
-                    </div>
-
-                    <div class="filter-section">
-                        <h3>Format</h3>
-                        <ul class="filter-list">
-                            <li>
-                                <input type="checkbox" id="hardcover" class="filter-checkbox">
-                                <label for="hardcover">Hardcover</label>
-                            </li>
-
-                            <li>
-                                <input type="checkbox" id="ebook" class="filter-checkbox">
-                                <label for="ebook">E-Book</label>
-                            </li>
-
-                        </ul>
-                    </div>
-
-                    <button class="btn apply-filters">Apply Filters</button>
-                    <button class="btn btn-outline clear-filters">Clear All</button>
-                </div>
-
-                <div class="book-grid">
-                    <!-- Book 1 -->
-                    <div class="book-card">
-                        <div class="book-badge bestseller">Bestseller</div>
-                        <div class="book-cover">
-                            <img src="/api/placeholder/300/450" alt="Book Cover">
-                            <div class="book-actions">
-                                <button class="quick-view-btn" data-book-id="1"><i class="fas fa-eye"></i> Quick View</button>
-                                <button class="add-to-cart-btn" data-book-id="1"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">The Great Adventure</h3>
-                            <p class="book-author">By John Smith</p>
-                            <div class="book-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <span class="rating-count">(42)</span>
-                            </div>
-                            <p class="book-price">R250.99</p>
-                        </div>
-                    </div>
-
-                    <!-- Book 2 -->
-                    <div class="book-card">
-                        <div class="book-badge new">New</div>
-                        <div class="book-cover">
-                            <img src="/api/placeholder/300/450" alt="Book Cover">
-                            <div class="book-actions">
-                                <button class="quick-view-btn" data-book-id="2"><i class="fas fa-eye"></i> Quick View</button>
-                                <button class="add-to-cart-btn" data-book-id="2"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">Mystery of the Lost City</h3>
-                            <p class="book-author">By Jane Doe</p>
-                            <div class="book-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                                <span class="rating-count">(28)</span>
-                            </div>
-                            <p class="book-price">R324.99</p>
-                        </div>
-                    </div>
-
-                    <!-- Book 3 -->
-                    <div class="book-card">
-                        <div class="book-cover">
-                            <img src="/api/placeholder/300/450" alt="Book Cover">
-                            <div class="book-actions">
-                                <button class="quick-view-btn" data-book-id="3"><i class="fas fa-eye"></i> Quick View</button>
-                                <button class="add-to-cart-btn" data-book-id="3"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">The Art of Cooking</h3>
-                            <p class="book-author">By Chef Michael</p>
-                            <div class="book-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <span class="rating-count">(56)</span>
-                            </div>
-                            <p class="book-price">R500.00</p>
-                        </div>
-                    </div>
-
-                    <!-- Book 4 -->
-                    <div class="book-card">
-                        <div class="book-badge sale">Sale</div>
-                        <div class="book-cover">
-                            <img src="/api/placeholder/300/450" alt="Book Cover">
-                            <div class="book-actions">
-                                <button class="quick-view-btn" data-book-id="4"><i class="fas fa-eye"></i> Quick View</button>
-                                <button class="add-to-cart-btn" data-book-id="4"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">History of the World</h3>
-                            <p class="book-author">By Professor Thompson</p>
-                            <div class="book-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <i class="far fa-star"></i>
-                                <span class="rating-count">(37)</span>
-                            </div>
-                            <p class="book-price"><span class="original-price">R425.99</span> R325.99</p>
-                        </div>
-                    </div>
-
-                    <!-- Book 5 -->
-                    <div class="book-card">
-                        <div class="book-cover">
-                            <img src="/api/placeholder/300/450" alt="Book Cover">
-                            <div class="book-actions">
-                                <button class="quick-view-btn" data-book-id="5"><i class="fas fa-eye"></i> Quick View</button>
-                                <button class="add-to-cart-btn" data-book-id="5"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">Software Engineering</h3>
-                            <p class="book-author">By Dr. Allan Roberts</p>
-                            <div class="book-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="far fa-star"></i>
-                                <span class="rating-count">(19)</span>
-                            </div>
-                            <p class="book-price">R450.00</p>
-                        </div>
-                    </div>
-
-                    <!-- Book 6 -->
-                    <div class="book-card">
-                        <div class="book-badge new">New</div>
-                        <div class="book-cover">
-                            <img src="/api/placeholder/300/450" alt="Book Cover">
-                            <div class="book-actions">
-                                <button class="quick-view-btn" data-book-id="6"><i class="fas fa-eye"></i> Quick View</button>
-                                <button class="add-to-cart-btn" data-book-id="6"><i class="fas fa-shopping-cart"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                        <div class="book-info">
-                            <h3 class="book-title">Medical Terminology</h3>
-                            <p class="book-author">By Dr. Sarah Johnson</p>
-                            <div class="book-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star-half-alt"></i>
-                                <span class="rating-count">(31)</span>
-                            </div>
-                            <p class="book-price">R550.00</p>
-                        </div>
-                    </div>
-                    <script src="{{ url_for('static', filename='bookscripts.js') }}"></script>
-
+    <script src="{{ url_for('static', filename='bookscripts.js') }}"></script>
 </body>
-
 </html>

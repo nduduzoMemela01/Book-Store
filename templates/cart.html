@@ -3,56 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart - Bookstore</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='cart.css') }}">
+    <title>Cart</title>
 </head>
 <body>
-    <header>
-        <h1>Your Shopping Cart</h1>
-    </header>
-    
-    <main>
-        {% if cart %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Book Name</th>
-                        <th>Author</th>
-                        <th>Price (R)</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for book in cart %}
-                        <tr>
-                            <td>{{ book.title }}</td>
-                            <td>{{ book.author }}</td>
-                            <td>R{{ book.price }}</td>
-                            <td>
-                                <form action="{{ url_for('remove_from_cart', book_id=book.id) }}" method="POST">
-                                    <button type="submit">Remove</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <h1>Your Cart</h1>
+    <div id="cart-items"></div>
+    <p>Total: <span id="cart-total">R0.00</span></p>
+    <button id="complete-order">Complete Order</button>
 
-            <h2>Total Price: R{{ total }}</h2>
-
-            <form action="{{ url_for('reserve') }}" method="POST">
-                <label for="email">Enter Your Email:</label>
-                <input type="email" name="email" id="email" required>
-
-                <label for="initials">Enter Your Initials:</label>
-                <input type="text" name="initials" id="initials" required>
-
-                <button type="submit">Reserve Books</button>
-            </form>
-        {% else %}
-            <p>Your cart is empty.</p>
-            <a href="/">Browse Books</a>
-        {% endif %}
-    </main>
+    <script>
+               document.addEventListener('DOMContentLoaded', async function () {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const cartTotalElement = document.getElementById('cart-total');
+            const studentNumber = '22332973'; // Replace with the logged-in user's student number
+        
+            // Function to load the cart from the backend
+            async function loadCart() {
+                try {
+                    const response = await fetch(`http://localhost:5000/getcart?studentNumber=${studentNumber}`);
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch cart items');
+                    }
+        
+                    const data = await response.json();
+        
+                    let total = 0;
+                    cartItemsContainer.innerHTML = ''; // Clear the cart items container
+        
+                    data.cart.forEach(item => {
+                        const itemElement = document.createElement('div');
+                        itemElement.innerHTML = `
+                            <p>Book ID: ${item.book_id}</p>
+                            <p>Quantity: ${item.quantity}</p>
+                            <p>Added At: ${item.added_at}</p>
+                            <button class="remove-btn" data-book-id="${item.book_id}">Remove</button>
+                        `;
+                        cartItemsContainer.appendChild(itemElement);
+                        total += item.quantity * 100; // Replace 100 with the actual price
+                    });
+        
+                    cartTotalElement.textContent = `R${total.toFixed(2)}`;
+        
+                    // Attach event listeners to the "Remove" buttons
+                    document.querySelectorAll('.remove-btn').forEach(button => {
+                        button.addEventListener('click', async function () {
+                            const bookId = this.getAttribute('data-book-id');
+                            await removeFromCart(bookId);
+                        });
+                    });
+                } catch (error) {
+                    console.error('Error loading cart:', error);
+                }
+            }
+        
+            // Function to remove a book from the cart
+            async function removeFromCart(bookId) {
+                try {
+                    const response = await fetch('http://localhost:5000/removefromcart', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ studentNumber, bookId }),
+                    });
+        
+                    const result = await response.json();
+        
+                    if (response.ok) {
+                        alert(result.message);
+                        await loadCart(); // Reload the cart after removing the item
+                    } else {
+                        alert(result.error || 'Failed to remove book from cart.');
+                    }
+                } catch (error) {
+                    console.error('Error removing book from cart:', error);
+                }
+            }
+        
+            // Load the cart when the page loads
+            await loadCart();
+        });
+    </script>
 </body>
 </html>

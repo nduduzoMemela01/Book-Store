@@ -1,68 +1,68 @@
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Sidebar Toggle
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
     const toggleSidebar = document.getElementById('toggle-sidebar');
     const mobileToggle = document.getElementById('mobile-toggle');
-    
+
     // Section Navigation
     const menuItems = document.querySelectorAll('.menu-item');
     const sections = document.querySelectorAll('[id$="-section"]');
-    
+
     // Books Management
     const addBookBtn = document.getElementById('add-book-btn');
     const bookSearchInput = document.getElementById('book-search');
-    
+
     // Modal Variables
     let currentModal = null;
-    
+
     // Toggle Sidebar for Desktop
-    toggleSidebar.addEventListener('click', function() {
-    sidebar.classList.toggle('collapsed');
-    mainContent.classList.toggle('expanded');
+    toggleSidebar.addEventListener('click', function () {
+        sidebar.classList.toggle('collapsed');
+        mainContent.classList.toggle('expanded');
     });
-    
+
     // Toggle Sidebar for Mobile
     if (mobileToggle) {
-    mobileToggle.addEventListener('click', function() {
-    sidebar.classList.toggle('mobile-visible');
-    });
+        mobileToggle.addEventListener('click', function () {
+            sidebar.classList.toggle('mobile-visible');
+        });
     }
-    
+
     // Handle Section Navigation
     menuItems.forEach(item => {
-    item.addEventListener('click', function(e) {
-    e.preventDefault();
-    
-    // Update active menu item
-    menuItems.forEach(i => i.classList.remove('active'));
-    this.classList.add('active');
-    
-    // Show corresponding section
-    const targetSection = this.getAttribute('data-section');
-    sections.forEach(section => {
-    section.classList.add('section-hidden');
-    if (section.id === targetSection) {
-    section.classList.remove('section-hidden');
-    }
+        item.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Update active menu item
+            menuItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+
+            // Show corresponding section
+            const targetSection = this.getAttribute('data-section');
+            sections.forEach(section => {
+                section.classList.add('section-hidden');
+                if (section.id === targetSection) {
+                    section.classList.remove('section-hidden');
+                }
+            });
+
+            // Close sidebar on mobile after navigation
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('mobile-visible');
+            }
+        });
     });
-    
-    // Close sidebar on mobile after navigation
-    if (window.innerWidth <= 768) {
-    sidebar.classList.remove('mobile-visible');
-    }
-    });
-    });
-    
+
     // Modal Functions
     function createModal(title, content, onSave = null) {
-    // Create modal structure
-    const modal = document.createElement('div');
-    modal.classList.add('modal');
-    
-    modal.innerHTML = `
+        // Create modal structure
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
+
+        modal.innerHTML = `
     <div class="modal-content">
     <div class="modal-header">
     <h3>${title}</h3>
@@ -77,51 +77,51 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     </div>
     `;
-    
-    document.body.appendChild(modal);
-    currentModal = modal;
-    
-    // Show the modal
-    setTimeout(() => {
-    modal.style.display = 'flex';
-    }, 10);
-    
-    // Close button functionality
-    const closeBtn = modal.querySelector('.close-btn');
-    const cancelBtn = modal.querySelector('.cancel-btn');
-    const saveBtn = modal.querySelector('.save-btn');
-    
-    closeBtn.addEventListener('click', () => closeModal());
-    cancelBtn.addEventListener('click', () => closeModal());
-    saveBtn.addEventListener('click', () => {
-    if (onSave) {
-    onSave();
+
+        document.body.appendChild(modal);
+        currentModal = modal;
+
+        // Show the modal
+        setTimeout(() => {
+            modal.style.display = 'flex';
+        }, 10);
+
+        // Close button functionality
+        const closeBtn = modal.querySelector('.close-btn');
+        const cancelBtn = modal.querySelector('.cancel-btn');
+        const saveBtn = modal.querySelector('.save-btn');
+
+        closeBtn.addEventListener('click', () => closeModal());
+        cancelBtn.addEventListener('click', () => closeModal());
+        saveBtn.addEventListener('click', () => {
+            if (onSave) {
+                onSave();
+            }
+            closeModal();
+        });
+
+        // Close when clicking outside
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        return modal;
     }
-    closeModal();
-    });
-    
-    // Close when clicking outside
-    modal.addEventListener('click', function(e) {
-    if (e.target === modal) {
-    closeModal();
-    }
-    });
-    
-    return modal;
-    }
-    
+
     function closeModal() {
-    if (currentModal) {
-    currentModal.style.display = 'none';
-    document.body.removeChild(currentModal);
-    currentModal = null;
+        if (currentModal) {
+            currentModal.style.display = 'none';
+            document.body.removeChild(currentModal);
+            currentModal = null;
+        }
     }
-    }
-    
+
     // Add Book Modal
     if (addBookBtn) {
-    addBookBtn.addEventListener('click', function() {
-    const modalContent = `
+        addBookBtn.addEventListener('click', function () {
+            const modalContent = `
     <form id="add-book-form">
     <div class="form-row">
     <div class="form-group">
@@ -171,33 +171,33 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     </form>
     `;
-    
-    createModal('Add New Book', modalContent, saveBook);
-    });
+
+            createModal('Add New Book', modalContent, saveBook);
+        });
     }
-    
+
     // Save Book Function
     function saveBook() {
-    // In a real application, this would send data to a server
-    // For this demo, we'll just add a new row to the table
-    const bookTitle = document.getElementById('book-title').value;
-    const bookAuthor = document.getElementById('book-author').value;
-    const bookISBN = document.getElementById('book-isbn').value;
-    const bookCategory = document.getElementById('book-category').value;
-    const bookPrice = document.getElementById('book-price').value;
-    const bookStock = document.getElementById('book-stock').value;
-    
-    if (!bookTitle || !bookAuthor || !bookISBN || !bookCategory || !bookPrice || !bookStock) {
-    return;
-    }
-    
-    // Find the books table
-    const booksTable = document.querySelector('#books-section table tbody');
-    if (!booksTable) return;
-    
-    // Create a new row
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
+        // In a real application, this would send data to a server
+        // For this demo, we'll just add a new row to the table
+        const bookTitle = document.getElementById('book-title').value;
+        const bookAuthor = document.getElementById('book-author').value;
+        const bookISBN = document.getElementById('book-isbn').value;
+        const bookCategory = document.getElementById('book-category').value;
+        const bookPrice = document.getElementById('book-price').value;
+        const bookStock = document.getElementById('book-stock').value;
+
+        if (!bookTitle || !bookAuthor || !bookISBN || !bookCategory || !bookPrice || !bookStock) {
+            return;
+        }
+
+        // Find the books table
+        const booksTable = document.querySelector('#books-section table tbody');
+        if (!booksTable) return;
+
+        // Create a new row
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
     <td>
     <div class="book-info">
     <img src="/api/placeholder/60/80" alt="Book Cover" class="book-image">
@@ -219,37 +219,37 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     </td>
     `;
-    
-    // Add event listeners to the new action buttons
-    const viewBtn = newRow.querySelector('.action-btn:nth-child(1)');
-    const editBtn = newRow.querySelector('.action-btn:nth-child(2)');
-    const deleteBtn = newRow.querySelector('.action-btn:nth-child(3)');
-    
-    viewBtn.addEventListener('click', function() {
-    viewBook(bookTitle, bookAuthor, bookISBN, bookCategory, bookPrice, bookStock);
-    });
-    
-    editBtn.addEventListener('click', function() {
-    editBook(newRow, bookTitle, bookAuthor, bookISBN, bookCategory, bookPrice, bookStock);
-    });
-    
-    deleteBtn.addEventListener('click', function() {
-    if (confirm('Are you sure you want to delete this book?')) {
-    booksTable.removeChild(newRow);
-    showNotification('Book deleted successfully', 'success');
+
+        // Add event listeners to the new action buttons
+        const viewBtn = newRow.querySelector('.action-btn:nth-child(1)');
+        const editBtn = newRow.querySelector('.action-btn:nth-child(2)');
+        const deleteBtn = newRow.querySelector('.action-btn:nth-child(3)');
+
+        viewBtn.addEventListener('click', function () {
+            viewBook(bookTitle, bookAuthor, bookISBN, bookCategory, bookPrice, bookStock);
+        });
+
+        editBtn.addEventListener('click', function () {
+            editBook(newRow, bookTitle, bookAuthor, bookISBN, bookCategory, bookPrice, bookStock);
+        });
+
+        deleteBtn.addEventListener('click', function () {
+            if (confirm('Are you sure you want to delete this book?')) {
+                booksTable.removeChild(newRow);
+                showNotification('Book deleted successfully', 'success');
+            }
+        });
+
+        // Add the row to the table
+        booksTable.prepend(newRow);
+
+        // Show success notification
+        showNotification('Book added successfully', 'success');
     }
-    });
-    
-    // Add the row to the table
-    booksTable.prepend(newRow);
-    
-    // Show success notification
-    showNotification('Book added successfully', 'success');
-    }
-    
+
     // View Book Details
     function viewBook(title, author, isbn, category, price, stock) {
-    const modalContent = `
+        const modalContent = `
     <div class="book-details-view">
     <div class="book-details-header">
     <img src="/api/placeholder/120/160" alt="Book Cover" style="border-radius: 4px; margin-right: 20px;">
@@ -273,18 +273,18 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     </div>
     `;
-    
-    const modal = createModal('Book Details', modalContent);
-    
-    // Change the footer to just have a close button
-    const footer = modal.querySelector('.modal-footer');
-    footer.innerHTML = '<button class="btn">Close</button>';
-    footer.querySelector('.btn').addEventListener('click', closeModal);
+
+        const modal = createModal('Book Details', modalContent);
+
+        // Change the footer to just have a close button
+        const footer = modal.querySelector('.modal-footer');
+        footer.innerHTML = '<button class="btn">Close</button>';
+        footer.querySelector('.btn').addEventListener('click', closeModal);
     }
-    
+
     // Edit Book
     function editBook(row, title, author, isbn, category, price, stock) {
-    const modalContent = `
+        const modalContent = `
     <form id="edit-book-form">
     <div class="form-row">
     <div class="form-group">
@@ -333,59 +333,59 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     </form>
     `;
-    
-    createModal('Edit Book', modalContent, function() {
-    updateBook(row);
-    });
+
+        createModal('Edit Book', modalContent, function () {
+            updateBook(row);
+        });
     }
-    
+
     // Update Book
     function updateBook(row) {
-    const bookTitle = document.getElementById('edit-book-title').value;
-    const bookAuthor = document.getElementById('edit-book-author').value;
-    const bookISBN = document.getElementById('edit-book-isbn').value;
-    const bookCategory = document.getElementById('edit-book-category').value;
-    const bookPrice = document.getElementById('edit-book-price').value;
-    const bookStock = document.getElementById('edit-book-stock').value;
-    
-    if (!bookTitle || !bookAuthor || !bookISBN || !bookCategory || !bookPrice || !bookStock) {
-    return;
+        const bookTitle = document.getElementById('edit-book-title').value;
+        const bookAuthor = document.getElementById('edit-book-author').value;
+        const bookISBN = document.getElementById('edit-book-isbn').value;
+        const bookCategory = document.getElementById('edit-book-category').value;
+        const bookPrice = document.getElementById('edit-book-price').value;
+        const bookStock = document.getElementById('edit-book-stock').value;
+
+        if (!bookTitle || !bookAuthor || !bookISBN || !bookCategory || !bookPrice || !bookStock) {
+            return;
+        }
+
+        // Update the row with new values
+        row.querySelector('.book-details h4').textContent = bookTitle;
+        row.querySelector('.book-details p').textContent = `by ${bookAuthor}`;
+        row.querySelectorAll('td')[1].textContent = bookISBN;
+        row.querySelectorAll('td')[2].textContent = bookCategory;
+        row.querySelectorAll('td')[3].textContent = `$${parseFloat(bookPrice).toFixed(2)}`;
+
+        const stockElement = row.querySelectorAll('td')[4].querySelector('.stock-level');
+        stockElement.textContent = bookStock;
+        stockElement.className = 'stock-level';
+        stockElement.classList.add(parseInt(bookStock) > 10 ? 'in-stock' : parseInt(bookStock) > 0 ? 'low-stock' : 'out-of-stock');
+
+        // Show success notification
+        showNotification('Book updated successfully', 'success');
     }
-    
-    // Update the row with new values
-    row.querySelector('.book-details h4').textContent = bookTitle;
-    row.querySelector('.book-details p').textContent = `by ${bookAuthor}`;
-    row.querySelectorAll('td')[1].textContent = bookISBN;
-    row.querySelectorAll('td')[2].textContent = bookCategory;
-    row.querySelectorAll('td')[3].textContent = `$${parseFloat(bookPrice).toFixed(2)}`;
-    
-    const stockElement = row.querySelectorAll('td')[4].querySelector('.stock-level');
-    stockElement.textContent = bookStock;
-    stockElement.className = 'stock-level';
-    stockElement.classList.add(parseInt(bookStock) > 10 ? 'in-stock' : parseInt(bookStock) > 0 ? 'low-stock' : 'out-of-stock');
-    
-    // Show success notification
-    showNotification('Book updated successfully', 'success');
-    }
-    
+
     // Notification System
     function showNotification(message, type = 'info') {
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.innerHTML = `
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
     <div class="notification-content">
     <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-times-circle' : 'fa-info-circle'}"></i>
     <span>${message}</span>
     </div>
     <button class="notification-close">&times;</button>
     `;
-    
-    // Add styles if not already in the document
-    if (!document.getElementById('notification-styles')) {
-    const styleEl = document.createElement('style');
-    styleEl.id = 'notification-styles';
-    styleEl.textContent = `
+
+        // Add styles if not already in the document
+        if (!document.getElementById('notification-styles')) {
+            const styleEl = document.createElement('style');
+            styleEl.id = 'notification-styles';
+            styleEl.textContent = `
     .notification {
     position: fixed;
     top: 20px;
@@ -450,118 +450,118 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     }
     `;
-    document.head.appendChild(styleEl);
+            document.head.appendChild(styleEl);
+        }
+
+        // Add to document
+        document.body.appendChild(notification);
+
+        // Close button functionality
+        const closeBtn = notification.querySelector('.notification-close');
+        closeBtn.addEventListener('click', function () {
+            document.body.removeChild(notification);
+        });
+
+        // Auto close after 5 seconds
+        setTimeout(function () {
+            if (document.body.contains(notification)) {
+                document.body.removeChild(notification);
+            }
+        }, 5000);
     }
-    
-    // Add to document
-    document.body.appendChild(notification);
-    
-    // Close button functionality
-    const closeBtn = notification.querySelector('.notification-close');
-    closeBtn.addEventListener('click', function() {
-    document.body.removeChild(notification);
-    });
-    
-    // Auto close after 5 seconds
-    setTimeout(function() {
-    if (document.body.contains(notification)) {
-    document.body.removeChild(notification);
-    }
-    }, 5000);
-    }
-    
+
     // Book Search Functionality
     if (bookSearchInput) {
-    bookSearchInput.addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const booksTable = document.querySelector('#books-section table tbody');
-    if (!booksTable) return;
-    
-    const rows = booksTable.querySelectorAll('tr');
-    
-    rows.forEach(row => {
-    const title = row.querySelector('.book-details h4').textContent.toLowerCase();
-    const author = row.querySelector('.book-details p').textContent.toLowerCase();
-    const isbn = row.querySelectorAll('td')[1].textContent.toLowerCase();
-    const category = row.querySelectorAll('td')[2].textContent.toLowerCase();
-    
-    if (title.includes(searchTerm) || author.includes(searchTerm) || isbn.includes(searchTerm) || category.includes(searchTerm)) {
-    row.style.display = '';
-    } else {
-    row.style.display = 'none';
+        bookSearchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase();
+            const booksTable = document.querySelector('#books-section table tbody');
+            if (!booksTable) return;
+
+            const rows = booksTable.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                const title = row.querySelector('.book-details h4').textContent.toLowerCase();
+                const author = row.querySelector('.book-details p').textContent.toLowerCase();
+                const isbn = row.querySelectorAll('td')[1].textContent.toLowerCase();
+                const category = row.querySelectorAll('td')[2].textContent.toLowerCase();
+
+                if (title.includes(searchTerm) || author.includes(searchTerm) || isbn.includes(searchTerm) || category.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
     }
-    });
-    });
-    }
-    
+
     // Initialize action buttons for existing books
     function initializeActionButtons() {
-    const bookRows = document.querySelectorAll('#books-section table tbody tr');
-    
-    bookRows.forEach(row => {
-    const viewBtn = row.querySelector('.action-btn:nth-child(1)');
-    const editBtn = row.querySelector('.action-btn:nth-child(2)');
-    const deleteBtn = row.querySelector('.action-btn:nth-child(3)');
-    
-    if (viewBtn) {
-    viewBtn.addEventListener('click', function() {
-    const title = row.querySelector('.book-details h4').textContent;
-    const author = row.querySelector('.book-details p').textContent.replace('by ', '');
-    const isbn = row.querySelectorAll('td')[1].textContent;
-    const category = row.querySelectorAll('td')[2].textContent;
-    const price = row.querySelectorAll('td')[3].textContent.replace('$', '');
-    const stock = row.querySelectorAll('td')[4].querySelector('.stock-level').textContent;
-    
-    viewBook(title, author, isbn, category, price, stock);
-    });
+        const bookRows = document.querySelectorAll('#books-section table tbody tr');
+
+        bookRows.forEach(row => {
+            const viewBtn = row.querySelector('.action-btn:nth-child(1)');
+            const editBtn = row.querySelector('.action-btn:nth-child(2)');
+            const deleteBtn = row.querySelector('.action-btn:nth-child(3)');
+
+            if (viewBtn) {
+                viewBtn.addEventListener('click', function () {
+                    const title = row.querySelector('.book-details h4').textContent;
+                    const author = row.querySelector('.book-details p').textContent.replace('by ', '');
+                    const isbn = row.querySelectorAll('td')[1].textContent;
+                    const category = row.querySelectorAll('td')[2].textContent;
+                    const price = row.querySelectorAll('td')[3].textContent.replace('$', '');
+                    const stock = row.querySelectorAll('td')[4].querySelector('.stock-level').textContent;
+
+                    viewBook(title, author, isbn, category, price, stock);
+                });
+            }
+
+            if (editBtn) {
+                editBtn.addEventListener('click', function () {
+                    const title = row.querySelector('.book-details h4').textContent;
+                    const author = row.querySelector('.book-details p').textContent.replace('by ', '');
+                    const isbn = row.querySelectorAll('td')[1].textContent;
+                    const category = row.querySelectorAll('td')[2].textContent;
+                    const price = row.querySelectorAll('td')[3].textContent.replace('$', '');
+                    const stock = row.querySelectorAll('td')[4].querySelector('.stock-level').textContent;
+
+                    editBook(row, title, author, isbn, category, price, stock);
+                });
+            }
+
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function () {
+                    if (confirm('Are you sure you want to delete this book?')) {
+                        row.parentNode.removeChild(row);
+                        showNotification('Book deleted successfully', 'success');
+                    }
+                });
+            }
+        });
     }
-    
-    if (editBtn) {
-    editBtn.addEventListener('click', function() {
-    const title = row.querySelector('.book-details h4').textContent;
-    const author = row.querySelector('.book-details p').textContent.replace('by ', '');
-    const isbn = row.querySelectorAll('td')[1].textContent;
-    const category = row.querySelectorAll('td')[2].textContent;
-    const price = row.querySelectorAll('td')[3].textContent.replace('$', '');
-    const stock = row.querySelectorAll('td')[4].querySelector('.stock-level').textContent;
-    
-    editBook(row, title, author, isbn, category, price, stock);
-    });
-    }
-    
-    if (deleteBtn) {
-    deleteBtn.addEventListener('click', function() {
-    if (confirm('Are you sure you want to delete this book?')) {
-    row.parentNode.removeChild(row);
-    showNotification('Book deleted successfully', 'success');
-    }
-    });
-    }
-    });
-    }
-    
+
     // Initialize Orders Section
     function initializeOrdersSection() {
-    // Add event listeners to order view buttons
-    const orderViewBtns = document.querySelectorAll('#dashboard-section .action-btn:nth-child(1)');
-    
-    orderViewBtns.forEach(btn => {
-    btn.addEventListener('click', function() {
-    const row = this.closest('tr');
-    const orderId = row.querySelectorAll('td')[0].textContent;
-    const customer = row.querySelectorAll('td')[1].textContent;
-    const date = row.querySelectorAll('td')[2].textContent;
-    const amount = row.querySelectorAll('td')[3].textContent;
-    const status = row.querySelectorAll('td')[4].querySelector('.status-pill').textContent;
-    
-    viewOrder(orderId, customer, date, amount, status);
-    });
-    });
+        // Add event listeners to order view buttons
+        const orderViewBtns = document.querySelectorAll('#dashboard-section .action-btn:nth-child(1)');
+
+        orderViewBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const row = this.closest('tr');
+                const orderId = row.querySelectorAll('td')[0].textContent;
+                const customer = row.querySelectorAll('td')[1].textContent;
+                const date = row.querySelectorAll('td')[2].textContent;
+                const amount = row.querySelectorAll('td')[3].textContent;
+                const status = row.querySelectorAll('td')[4].querySelector('.status-pill').textContent;
+
+                viewOrder(orderId, customer, date, amount, status);
+            });
+        });
     }
-    
+
     // View Order
     function viewOrder(orderId, customer, date, amount, status) {
-    const modalContent = `
+        const modalContent = `
     <div class="order-details">
     <div class="order-info">
     <div class="info-row">
@@ -642,12 +642,12 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     </div>
     `;
-    
-    // Add some styles for this modal
-    const styleEl = document.createElement('style');
-    if (!document.getElementById('order-styles')) {
-    styleEl.id = 'order-styles';
-    styleEl.textContent = `
+
+        // Add some styles for this modal
+        const styleEl = document.createElement('style');
+        if (!document.getElementById('order-styles')) {
+            styleEl.id = 'order-styles';
+            styleEl.textContent = `
     .order-info {
     background-color: #f5f7f9;
     padding: 15px;
@@ -679,58 +679,57 @@ document.addEventListener('DOMContentLoaded', function() {
     margin-bottom: 10px;
     }
     `;
-    document.head.appendChild(styleEl);
-    }
-    
-    const modal = createModal('Order Details', modalContent);
-    
-    // Change the footer to include status update buttons
-    const footer = modal.querySelector('.modal-footer');
-    footer.innerHTML = `
+            document.head.appendChild(styleEl);
+        }
+
+        const modal = createModal('Order Details', modalContent);
+
+        // Change the footer to include status update buttons
+        const footer = modal.querySelector('.modal-footer');
+        footer.innerHTML = `
     <button class="btn btn-success">Mark as Delivered</button>
     <button class="btn btn-danger">Cancel Order</button>
     <button class="btn">Close</button>
     `;
-    
-    footer.querySelector('.btn-success').addEventListener('click', function() {
-    showNotification('Order marked as delivered', 'success');
-    closeModal();
-    });
-    
-    footer.querySelector('.btn-danger').addEventListener('click', function() {
-    showNotification('Order cancelled', 'error');
-    closeModal();
-    });
-    
-    footer.querySelector('.btn:last-child').addEventListener('click', closeModal);
+
+        footer.querySelector('.btn-success').addEventListener('click', function () {
+            showNotification('Order marked as delivered', 'success');
+            closeModal();
+        });
+
+        footer.querySelector('.btn-danger').addEventListener('click', function () {
+            showNotification('Order cancelled', 'error');
+            closeModal();
+        });
+
+        footer.querySelector('.btn:last-child').addEventListener('click', closeModal);
     }
-    
+
     // Initialize the page
     initializeActionButtons();
     initializeOrdersSection();
-    
+
     // Handle initial section visibility
     window.addEventListener('hashchange', handleUrlHash);
     handleUrlHash();
-    
+
     function handleUrlHash() {
-    const hash = window.location.hash;
-    if (hash) {
-    const targetMenuItem = document.querySelector(`.menu-item[href="${hash}"]`);
-    if (targetMenuItem) {
-    // Trigger a click on the corresponding menu item
-    targetMenuItem.click();
+        const hash = window.location.hash;
+        if (hash) {
+            const targetMenuItem = document.querySelector(`.menu-item[href="${hash}"]`);
+            if (targetMenuItem) {
+                // Trigger a click on the corresponding menu item
+                targetMenuItem.click();
+            }
+        }
     }
-    }
-    }
-    
+
     // Handle responsive behavior
-    window.addEventListener('resize', function() {
-    if (window.innerWidth <= 768) {
-    sidebar.classList.remove('collapsed');
-    sidebar.classList.remove('mobile-visible');
-    mainContent.classList.remove('expanded');
-    }
+    window.addEventListener('resize', function () {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.remove('collapsed');
+            sidebar.classList.remove('mobile-visible');
+            mainContent.classList.remove('expanded');
+        }
     });
-    });
-    
+});

@@ -1,0 +1,4 @@
+flask
+flask-cors
+pymongo==4.5.0
+python-dotenv

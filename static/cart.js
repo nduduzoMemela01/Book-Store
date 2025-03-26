@@ -1,101 +1,191 @@
-document.addEventListener('DOMContentLoaded', function() {
-    initBookActions();
-    loadCartItems(); // Load cart items when visiting the cart page
+// Cart state
+let cart = {
+    items: [],
+    total: 0
+};
+
+// DOM elements
+let cartItemsContainer;
+let cartTotalElement;
+let cartCountElement;
+
+// Initialize cart
+document.addEventListener('DOMContentLoaded', async function () {
+    cartItemsContainer = document.getElementById('cart-items');
+    cartTotalElement = document.getElementById('cart-total');
+    cartCountElement = document.getElementById('cart-count');
+
+    // Fetch cart items from the backend and display them
+    await loadCartFromBackend();
+
+    // Display initial cart
+    updateCartDisplay();
+
+    // Fetch and update cart count from the backend
+    await updateCartCount();
+
+    // Set up periodic refresh for cart count (optional)
+    setInterval(updateCartCount, 30000); // Refresh every 30 seconds
 });
 
-// Book actions: Add to Cart functionality
-function initBookActions() {
-    const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+// Fetch cart items from the backend
+async function loadCartFromBackend() {
+    const studentNumber = '22332973'; // Replace with the logged-in user's student number
 
-    addToCartButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const bookCard = this.closest('.book-card'); // Find the closest book card
-            const book = {
-                id: bookCard.getAttribute('data-book-id'),
-                title: bookCard.querySelector('.book-title').textContent,
-                author: bookCard.querySelector('.book-author').textContent,
-                price: bookCard.querySelector('.book-price').textContent,
-                image: bookCard.querySelector('img').src
-            };
+    try {
+        const response = await fetch(`http://localhost:5000/getcart?studentNumber=${studentNumber}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch cart items: ${response.statusText}`);
+        }
 
-            addToCart(book);
-        });
-    });
-}
-
-function addToCart(book) {
-    let cart = JSON.parse(localStorage.getItem('bookCart')) || [];
-
-    // Check if the book is already in the cart
-    const existingBook = cart.find(item => item.id === book.id);
-    if (existingBook) {
-        alert('This book is already in your cart.');
-        return;
-    }
-
-    cart.push(book);
-    localStorage.setItem('bookCart', JSON.stringify(cart));
-
-    updateCartCount(cart.length);
-
-    alert(`${book.title} added to cart!`);
-}
-
-// Update cart count in UI
-function updateCartCount(count) {
-    const cartCountElement = document.getElementById('cart-count');
-    if (cartCountElement) {
-        cartCountElement.textContent = count;
+        const data = await response.json();
+        cart.items = data.cart || []; // Load cart items from the backend
+        updateCartTotal(); // Update the cart total
+    } catch (error) {
+        console.error('Error fetching cart items:', error);
+        cart.items = []; // Default to an empty cart if there's an error
     }
 }
 
-// Load Cart Items on Cart Page
-function loadCartItems() {
-    const cartPage = document.querySelector('.cart-container');
-    if (!cartPage) return; // Only run on cart page
+// Add item to cart
+async function addToCart(book) {
+    const studentNumber = '22332973'; // Replace with the logged-in user's student number
 
-    const cartItemsContainer = document.getElementById('cart-items');
-    const cartSummary = document.getElementById('cart-total');
-    let cart = JSON.parse(localStorage.getItem('bookCart')) || [];
-
-    cartItemsContainer.innerHTML = '';
-    let total = 0;
-
-    cart.forEach(book => {
-        const bookPrice = parseFloat(book.price.replace('R', '')); // Convert price to number
-        total += bookPrice;
-
-        const cartItem = document.createElement('div');
-        cartItem.classList.add('cart-item');
-        cartItem.innerHTML = `
-            <img src="${book.image}" alt="${book.title}">
-            <div class="cart-item-info">
-                <p class="cart-item-title">${book.title}</p>
-                <p class="cart-item-author">${book.author}</p>
-                <p class="cart-item-price">${book.price}</p>
-            </div>
-            <button class="cart-item-remove" data-book-id="${book.id}">Remove</button>
-        `;
-        cartItemsContainer.appendChild(cartItem);
-    });
-
-    cartSummary.textContent = `Total: R${total.toFixed(2)}`;
-
-    // Attach event listeners to remove buttons
-    document.querySelectorAll('.cart-item-remove').forEach(button => {
-        button.addEventListener('click', function() {
-            const bookId = this.getAttribute('data-book-id');
-            removeFromCart(bookId);
+    try {
+        const response = await fetch('http://localhost:5000/addtocart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ studentNumber, bookId: book.id }),
         });
-    });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(result.message);
+            await loadCartFromBackend(); // Reload cart from the backend
+            updateCartDisplay(); // Update the cart display
+        } else {
+            alert(result.error || 'Failed to add book to cart.');
+        }
+    } catch (error) {
+        console.error('Error adding book to cart:', error);
+    }
 }
 
 // Remove item from cart
 function removeFromCart(bookId) {
-    let cart = JSON.parse(localStorage.getItem('bookCart')) || [];
-    cart = cart.filter(book => book.id !== bookId);
-    localStorage.setItem('bookCart', JSON.stringify(cart));
+    cart.items = cart.items.filter(item => item.id !== bookId);
 
-    loadCartItems(); // Refresh cart
-    updateCartCount(cart.length);
+    // Update cart total
+    updateCartTotal();
+
+    // Update display
+    updateCartDisplay();
+
+    // Show feedback
+    alert('Item removed from cart.');
+}
+
+// Update item quantity
+function updateQuantity(bookId, newQuantity) {
+    const item = cart.items.find(item => item.id === bookId);
+
+    if (item) {
+        if (newQuantity <= 0) {
+            removeFromCart(bookId);
+        } else {
+            item.quantity = newQuantity;
+
+            // Update cart total
+            updateCartTotal();
+
+            // Update display
+            updateCartDisplay();
+        }
+    }
+}
+
+// Update cart total
+function updateCartTotal() {
+    cart.total = cart.items.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+}
+
+// Update the cart display
+function updateCartDisplay() {
+    if (!cartItemsContainer) return;
+
+    // Clear current display
+    cartItemsContainer.innerHTML = '';
+
+    if (cart.items.length === 0) {
+        cartItemsContainer.innerHTML = '<p>Your cart is empty</p>';
+    } else {
+        // Create item elements
+        cart.items.forEach(item => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'cart-item';
+            itemElement.innerHTML = `
+                <img src="${item.image || '/api/placeholder/100/100'}" alt="${item.title}">
+                <div class="cart-item-info">
+                    <p class="cart-item-title">${item.title}</p>
+                    <p class="cart-item-author">By ${item.author}</p>
+                    <p class="cart-item-price">R${item.price.toFixed(2)}</p>
+                </div>
+                <div class="cart-item-quantity">
+                    <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                    <span>${item.quantity || 1}</span>
+                    <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                </div>
+                <button class="remove-btn" onclick="removeFromCart('${item.id}')">Remove</button>
+            `;
+            cartItemsContainer.appendChild(itemElement);
+        });
+    }
+
+    // Update total and count
+    if (cartTotalElement) {
+        cartTotalElement.textContent = `Total: R${cart.total.toFixed(2)}`;
+    }
+
+    if (cartCountElement) {
+        const itemCount = cart.items.reduce((count, item) => count + (item.quantity || 1), 0);
+        cartCountElement.textContent = itemCount;
+    }
+}
+
+// Fetch and update cart count from the backend
+async function updateCartCount() {
+    const studentNumber = '22332973'; // Replace with the logged-in user's student number
+
+    try {
+        const response = await fetch(`http://localhost:5000/cartcount?studentNumber=${studentNumber}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch cart count: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (cartCountElement) {
+            cartCountElement.textContent = data.count || 0; // Update the cart count in the UI
+        }
+    } catch (error) {
+        console.error('Error fetching cart count:', error);
+        if (cartCountElement) {
+            cartCountElement.textContent = '0'; // Default to 0 if there's an error
+        }
+    }
+}
+
+// Clear cart
+function clearCart() {
+    cart.items = [];
+    cart.total = 0;
+
+    // Update display
+    updateCartDisplay();
+
+    // Show feedback
+    alert('Cart cleared.');
 }
