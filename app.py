@@ -229,6 +229,3 @@ def login():
         return redirect(url_for('admin'))
     else:
         return jsonify({'error': 'Invalid Credentials'}), 401
-
-if __name__ == '__main__':
-    app.run(debug=True)
