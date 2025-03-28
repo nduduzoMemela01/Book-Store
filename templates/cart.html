@@ -9,13 +9,13 @@
     <h1>Your Cart</h1>
     <div id="cart-items"></div>
     <p>Total: <span id="cart-total">R0.00</span></p>
-    <button id="complete-order">Complete Order</button>
+    <button id="complete-order" onclick='checkout()'>Complete Order</button>
 
     <script>
-               document.addEventListener('DOMContentLoaded', async function () {
+            document.addEventListener('DOMContentLoaded', async function () {
             const cartItemsContainer = document.getElementById('cart-items');
             const cartTotalElement = document.getElementById('cart-total');
-            const studentNumber = '22332973'; // Replace with the logged-in user's student number
+            const studentNumber = localStorage.getItem("studentNumber"); // Replace with the logged-in user's student number
         
             // Function to load the cart from the backend
             async function loadCart() {
@@ -82,7 +82,21 @@
         
             // Load the cart when the page loads
             await loadCart();
+
         });
+        
+        // To checkout
+        async function checkout() {
+            try {
+                await fetch("http://localhost:5000/loadcheckout").then(res => {
+                    if (res.redirected) {
+                        window.location.href = res.url;
+                    }
+                });
+            } catch (error) {
+                console.error('Error checking out:', error);
+            }
+        }
     </script>
 </body>
 </html>

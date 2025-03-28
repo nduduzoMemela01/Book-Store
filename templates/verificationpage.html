@@ -3,17 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTP Verification</title>
-    <link rel="stylesheet" href="login-styles.css">
+    <title>Thank You</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='verification.css') }}">
 </head>
 <body>
     <div class="verification-container">
-        <h2>Enter OTP</h2>
-        <p>An OTP has been sent to your registered number.</p>
-        <input type="text" id="otp" placeholder="Enter OTP" maxlength="6">
-        <button onclick="verifyOTP()">Verify OTP</button>
+        <h2 id="thank-you-message">Thank you!</h2>
+        <p id="additional-message">Please come back again.</p>
+        <a href='/book' id='to-home-btn'>Go to Home</a>
     </div>
 
-    <script src="veryfication.js"></script>
-</body>
-</html>
+    <script>
+        // Retrieve the full name from localStorage and display it
+        document.addEventListener('DOMContentLoaded', function () {
+            const fullName = localStorage.getItem('fullName'); // Retrieve the full name from localStorage
+            const thankYouMessage = document.getElementById('thank-you-message');
+            const additionalMessage = document.getElementById('additional-message');
+
+            try {
+                // Send a POST request to the /signup endpoint
+                await fetch('http://localhost:5000/newcheckout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ fullName: fullName }),
+                });
+
+            // Check if the full name exists in localStorage
+            if (fullName) {
+                thankYouMessage.textContent = `Thank you, ${fullName}!`; // Display the full name
+                additionalMessage.textContent = 'Please come back again.'; // Additional message
+            } else {
+                thankYouMessage.textContent = 'Thank you!'; // Default message
+                additionalMessage.textContent = 'Please come back again.'; // Additional message
+            }
+        });.then(res => {
+            if (res.redirected) {
+                window.location.href = res.url;
+            }
+        });
+    } catch (error) {
+        // Handle network or other errors
+        console.error('Error:', error);
+        document.getElementById('error-message').textContent = 'An error occurred. Please try again later.';
+    }

@@ -3,451 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DUT BookHaven Admin Dashboard</title>
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3>DUT BookHaven</h3>
-            <button class="toggle-btn" id="toggle-sidebar">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
+<body onload="loadOrders()">
+    <div class="admin-container">
+        <h1>Admin Dashboard</h1>
 
-        <a href="#dashboard" class="menu-item active" data-section="dashboard-section">
-            <i class="fas fa-tachometer-alt"></i>
-            <span class="menu-text">Dashboard</span>
-        </a>
+        <!-- Add Book Section -->
+        <section id="add-book-section">
+            <h2>Add a Book</h2>
+            <form id="add-book-form">
+                <!-- Book Title -->
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
 
-        <a href="#books" class="menu-item" data-section="books-section">
-            <i class="fas fa-book"></i>
-            <span class="menu-text">Books</span>
-        </a>
+                <!-- Book Author -->
+                <label for="author">Author:</label>
+                <input type="text" id="author" name="author" required>
 
-        <a href="#orders" class="menu-item" data-section="orders-section">
-            <i class="fas fa-shopping-cart"></i>
-            <span class="menu-text">Orders</span>
-        </a>
+                <!-- Book Rating -->
+                <label for="rating">Rating:</label>
+                <input type="number" step="0.1" id="rating" name="rating" required>
 
-        <a href="#users" class="menu-item" data-section="users-section">
-            <i class="fas fa-users"></i>
-            <span class="menu-text">Users</span>
-        </a>
+                <!-- Rating Count -->
+                <label for="rating_count">Rating Count:</label>
+                <input type="number" id="rating_count" name="rating_count" required>
 
-        <a href="#categories" class="menu-item" data-section="categories-section">
-            <i class="fas fa-tags"></i>
-            <span class="menu-text">Categories</span>
-        </a>
+                <!-- Book Price -->
+                <label for="price">Price:</label>
+                <input type="number" step="0.01" id="price" name="price" required>
 
-        <a href="#discounts" class="menu-item" data-section="discounts-section">
-            <i class="fas fa-percent"></i>
-            <span class="menu-text">Discounts</span>
-        </a>
+                <!-- Faculty -->
+                <label for="faculty">Faculty:</label>
+                <input type="text" id="faculty" name="faculty" required>
 
-        <a href="#reports" class="menu-item" data-section="reports-section">
-            <i class="fas fa-chart-bar"></i>
-            <span class="menu-text">Reports</span>
-        </a>
+                <!-- Badge -->
+                <label for="badge">Badge:</label>
+                <input type="text" id="badge" name="badge" required>
 
-        <a href="#settings" class="menu-item" data-section="settings-section">
-            <i class="fas fa-cog"></i>
-            <span class="menu-text">Settings</span>
-        </a>
+                <!-- Cover URL -->
+                <label for="cover_url">Cover URL:</label>
+                <input type="text" id="cover_url" name="cover_url" required>
+
+                <!-- Submit Button -->
+                <button type="submit">Add Book</button>
+            </form>
+        </section>
+
+        <!-- Edit User Section -->
+        <section id="edit-user-section">
+            <h2>Edit User</h2>
+            <form id="edit-user-form">
+                <!-- Student Number -->
+                <label for="studentNumber">Student Number:</label>
+                <input type="text" id="studentNumber" name="studentNumber" required>
+
+                <!-- Password -->
+                <label for="password">Password:</label>
+                <input type="text" id="password" name="password">
+
+                <!-- Email -->
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+
+                <!-- Initials -->
+                <label for="initials">Initials:</label>
+                <input type="text" id="initials" name="initials">
+
+                <!-- Surname -->
+                <label for="surname">Surname:</label>
+                <input type="text" id="surname" name="surname">
+
+                <!-- User Type -->
+                <label for="userType">User Type:</label>
+                <input type="text" id="userType" name="userType">
+
+                <!-- Submit Button -->
+                <button type="submit">Edit User</button>
+            </form>
+        </section>
+
+        <!-- Edit Orders Section -->
+        <section id="edit-orders-section">
+            <h2>Edit Orders</h2>
+            <p>Feature to edit orders can be added here.</p>
+            <div id="orders-list">
+                <!-- Orders will be dynamically loaded here -->
+                 <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Student Number</th>
+                            <th>Full Name</th>
+                            <th>Phone Number</th>
+                            <th>Quantity</th>
+                            <th>Total Amount</th>
+                            <th>Order Date</th>
+                            <th>Delivery Address</th>
+                            <th>Ordered Books</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-table-body">
+                        <!-- Orders will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content" id="main-content">
-        <!-- Topbar -->
-        <div class="topbar">
-            <button class="toggle-btn mobile-toggle" id="mobile-toggle" style="display: none;">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search...">
-            </div>
-
-            <div class="user-actions">
-                <div class="notification-icon">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </div>
-
-                <div class="user-info">
-                    <img src="/api/placeholder/40/40" alt="Admin Avatar">
-                    <span>Admin User</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Dashboard Content -->
-        <div class="dashboard-content">
-            <!-- Dashboard Section -->
-            <div id="dashboard-section">
-                <h2>Dashboard Overview</h2>
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background-color: var(--primary);">
-                            <i class="fas fa-book"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h4>2,456</h4>
-                            <p>Total Books</p>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background-color: var(--success);">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h4>352</h4>
-                            <p>New Orders</p>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background-color: var(--warning);">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h4>1,845</h4>
-                            <p>Active Users</p>
-                        </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-icon" style="background-color: green;">
-                            <i class="fas fa-coins"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h4>R5634.00</h4>
-                            <p>Monthly Revenue</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="content-grid">
-                    <div class="panel">
-                        <div class="panel-header">
-                            <h3 class="panel-title">Recent Orders</h3>
-                            <button class="btn btn-primary">View All</button>
-                        </div>
-
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Customer</th>
-                                    <th>Customerid</th>
-                                    <th>Date</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#ORD-1278</td>
-                                    <td>John Smith</td>
-                                    <td>#33524</td>
-                                    <td>Mar 18, 2025</td>
-                                    <td>R146.80</td>
-                                    <td><span class="status-pill status-delivered">Delivered</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
-                                            <span class="action-btn" style="background-color: var(--success);"><i class="fas fa-check"></i></span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-1277</td>
-                                    <td>Emily Johnson</td>
-                                    <td>#33525</td>
-                                    <td>Mar 18, 2025</td>
-                                    <td>R789.25</td>
-                                    <td><span class="status-pill status-pending">Pending</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
-                                            <span class="action-btn" style="background-color: var(--success);"><i class="fas fa-check"></i></span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-1276</td>
-                                    <td>Michael Brown</td>
-                                    <td>#33526</td>
-                                    <td>Mar 17, 2025</td>
-                                    <td>R212.50</td>
-                                    <td><span class="status-pill status-delivered">Delivered</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
-                                            <span class="action-btn" style="background-color: var(--success);"><i class="fas fa-check"></i></span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-1275</td>
-                                    <td>Sarah Wilson</td>
-                                    <td>#33527</td>
-                                    <td>Mar 17, 2025</td>
-                                    <td>R365.30</td>
-                                    <td><span class="status-pill status-cancelled">Cancelled</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
-                                            <span class="action-btn" style="background-color: var(--warning);"><i class="fas fa-redo"></i></span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-1274</td>
-                                    <td>David Taylor</td>
-                                    <td>#33528</td>
-                                    <td>Mar 16, 2025</td>
-                                    <td>R178.40</td>
-                                    <td><span class="status-pill status-delivered">Delivered</span></td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
-                                            <span class="action-btn" style="background-color: var(--success);"><i class="fas fa-check"></i></span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div>
-                        <div class="panel">
-                            <div class="panel-header">
-                                <h3 class="panel-title">Low Stock Alert</h3>
-                                <button class="btn btn-primary">View All</button>
-                            </div>
-
-
-                            <!-- Load Orders Dynamically Using Jinja -->
-
-<!--                            <div class="content-grid">
-    <div class="panel">
-        <div class="panel-header">
-            <h3 class="panel-title">Recent Orders</h3>
-            <button class="btn btn-primary">View All</button>
-        </div>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Customer ID</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                <tr>
-                    <td>{{ order[0] }}</td>
-                    <td>{{ order[1] }}</td>
-                    <td>{{ order[2] }}</td>
-                    <td>{{ order[3] }}</td>
-                    <td>R{{ order[4] }}</td>
-                    <td>
-                        <span class="status-pill {% if order[5] == 'Delivered' %}status-delivered{% elif order[5] == 'Pending' %}status-pending{% elif order[5] == 'Cancelled' %}status-cancelled{% endif %}">
-                            {{ order[5] }}
-                        </span>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
-                            {% if order[5] == 'Pending' %}
-                            <span class="action-btn" style="background-color: var(--success);"><i class="fas fa-check"></i></span>
-                            {% elif order[5] == 'Cancelled' %}
-                            <span class="action-btn" style="background-color: var(--warning);"><i class="fas fa-redo"></i></span>
-                            {% endif %}
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-
--->
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Book</th>
-                                        <th>Quantity</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Introduction to Psychology</td>
-                                        <td><span class="stock-level low-stock">5</span></td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm">Restock</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Calculus II</td>
-                                        <td><span class="stock-level low-stock">3</span></td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm">Restock</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Modern Physics</td>
-                                        <td><span class="stock-level out-of-stock">0</span></td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm">Restock</button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>World Literature</td>
-                                        <td><span class="stock-level low-stock">2</span></td>
-                                        <td>
-                                            <button class="btn btn-primary btn-sm">Restock</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="panel">
-                            <div class="panel-header">
-                                <h3 class="panel-title">Popular Books</h3>
-                            </div>
-
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Sales</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-
-                                        <td>Introduction to Computer Science</td>
-                                        <td>245</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Business Management</td>
-                                        <td>198</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Calculus I</td>
-                                        <td>176</td>
-                                    </tr>
-                                    <tr>
-                                        <td>English Composition</td>
-                                        <td>154</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Books Section -->
-            <div id="books-section" class="section-hidden">
-                <div class="panel-header">
-                    <h2>Book Management</h2>
-                    <button class="btn btn-primary" id="add-book-btn">Add New Book</button>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-header">
-                        <div class="search-box" style="width: 300px;">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="book-search" placeholder="Search books...">
-                        </div>
-
-                        <div>
-                            <select class="form-control" style="width: auto; display: inline-block;">
-                                <option>All Faculties</option>
-                                <option>Accounting $ Informatics</option>
-                                <option>Applied Science</option>
-                                <option>Management Sciences</option>
-                                <option>Engineering $ Built Environment</option>
-                                <option>Health Sciences</option>
-                                <option>Arts $ Design</option>
-                            </select>
-
-                            <select class="form-control" style="width: auto; display: inline-block; margin-left: 10px;">
-                                <option>Sort By: Newest</option>
-                                <option>Sort By: Name (A-Z)</option>
-                                <option>Sort By: Price (Low-High)</option>
-                                <option>Sort By: Price (High-Low)</option>
-                                <option>Sort By: Stock</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Book</th>
-                                <th>ISBN</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Stock</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="book-info">
-                                        <img src="/api/placeholder/60/80" alt="Book Cover" class="book-image">
-                                        <div class="book-details">
-                                            <h4>Introduction to Computer Science</h4>
-                                            <p>by John Doe</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>978-3-16-148410-0</td>
-                                <td>Computer Science</td>
-                                <td>R289.99</td>
-                                <td><span class="stock-level in-stock">125</span></td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <span class="action-btn" style="background-color: var(--primary);"><i class="fas fa-eye"></i></span>
-                                        <span class="action-btn" style="background-color: var(--warning);"><i class="fas fa-edit"></i></span>
-                                        <span class="action-btn" style="background-color: var(--danger);"><i class="fas fa-trash"></i></span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="book-info">
-                                        <img src="/api/placeholder/60/80" alt="Book Cover" class="book-image">
-                                        <div class="book-details">
-                                            <h4>Calculus I</h4>
-                                            <p>by Sarah Johnson</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>978-0-13-110362-7</td>
-                                <td>Mathematics</td>
-
-                                <script src="{{ url_for('static', filename='adminscript.js') }}"></script>
-
-                                </script>
-
-                              </body>
-                              </html>
+    <script src="{{ url_for('static', filename='adminscript.js') }}"></script>
+</body>
+</html>

@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     await fetch('http://localhost:5000/addtocart', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ studentNumber: '22332973', bookId })
+                        body: JSON.stringify({ studentNumber: localStorage.getItem('studentNumber').toString(), bookId })
                     });
                     alert('Book added to cart!');
                 });

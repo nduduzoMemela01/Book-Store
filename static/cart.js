@@ -30,7 +30,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 // Fetch cart items from the backend
 async function loadCartFromBackend() {
-    const studentNumber = '22332973'; // Replace with the logged-in user's student number
+    const studentNumber = localStorage.getItem('studentNumber').toString(); // Replace with the logged-in user's student number
+    console.log("HHHH", studentNumber);
 
     try {
         const response = await fetch(`http://localhost:5000/getcart?studentNumber=${studentNumber}`);
@@ -49,7 +50,7 @@ async function loadCartFromBackend() {
 
 // Add item to cart
 async function addToCart(book) {
-    const studentNumber = '22332973'; // Replace with the logged-in user's student number
+    const studentNumber = localStorage.getItem("studentNumber").toString(); // Replace with the logged-in user's student number
 
     try {
         const response = await fetch('http://localhost:5000/addtocart', {
@@ -75,7 +76,7 @@ async function addToCart(book) {
 }
 
 // Remove item from cart
-function removeFromCart(bookId) {
+async function removeFromCart(bookId) {
     cart.items = cart.items.filter(item => item.id !== bookId);
 
     // Update cart total
@@ -83,6 +84,30 @@ function removeFromCart(bookId) {
 
     // Update display
     updateCartDisplay();
+
+    const studentNumber = localStorage.getItem("studentNumber").toString(); // Replace with the logged-in user's student number
+
+    try {
+        const response = await fetch('http://localhost:5000/removefromcart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ studentNumber, bookId: book.id }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert(result.message);
+            await loadCartFromBackend(); // Reload cart from the backend
+            updateCartDisplay(); // Update the cart display
+        } else {
+            alert(result.error || 'Failed to add book to cart.');
+        }
+    } catch (error) {
+        console.error('Error adding book to cart:', error);
+    }
 
     // Show feedback
     alert('Item removed from cart.');
@@ -157,7 +182,7 @@ function updateCartDisplay() {
 
 // Fetch and update cart count from the backend
 async function updateCartCount() {
-    const studentNumber = '22332973'; // Replace with the logged-in user's student number
+    const studentNumber = localStorage("studentNumber").toString(); // Replace with the logged-in user's student number
 
     try {
         const response = await fetch(`http://localhost:5000/cartcount?studentNumber=${studentNumber}`);

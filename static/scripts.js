@@ -3,6 +3,23 @@
 // Simulate OTP sent to the number 0682646495
 let otp = Math.floor(100000 + Math.random() * 900000); // Generate random 6-digit OTP
 
+// Toggle password visibility
+document.getElementById('togglePassword').addEventListener('click', function () {
+    const passwordField = document.getElementById('password');
+    const icon = this;
+
+    // Toggle the password field type
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordField.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+});
+
 // Login validation
 async function login() {
     let role = document.getElementById("role").value;
@@ -16,20 +33,9 @@ async function login() {
         },
         body: JSON.stringify({ role, studentNumber, password })
     }).then(res => {
+        localStorage.setItem('studentNumber', studentNumber);
         if (res.redirected) {
             window.location.href = res.url;
         }
     });
 }
-
-// // OTP verification
-// function verifyOTP() {
-//     let enteredOTP = document.getElementById("otp").value;
-//     if (enteredOTP == otp) {
-//         alert("OTP verified successfully!");
-//         // Redirect to next page (can be a dashboard or another page)
-//         window.location.href = "dashboard.html";
-//     } else {
-//         alert("Invalid OTP. Please try again.");
-//     }
-
