@@ -207,6 +207,22 @@ table tr:hover {
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main-content {
+        margin-left: 200px;
+        width: calc(100% - 200px);
+    }
+
+    .sidebar ul li a {
+        font-size: 0.9rem;
+        padding: 8px 10px;
+    }
+}
+
 @media (max-width: 768px) {
     .sidebar {
         width: 70px;
@@ -222,11 +238,34 @@ table tr:hover {
     }
 
     .sidebar ul li a {
-        font-size: 0.9rem;
-        padding: 8px 10px;
+        font-size: 0.8rem;
+        padding: 8px 5px;
+        text-align: center;
     }
 
     .side-by-side {
         flex-direction: column; /* Stack sections vertically on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        display: none; /* Hide sidebar on very small screens */
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 10px;
+    }
+
+    table th, table td {
+        font-size: 0.8rem;
+        padding: 8px;
+    }
+
+    form input, form button, form select {
+        font-size: 0.9rem;
+        padding: 8px;
     }
 }

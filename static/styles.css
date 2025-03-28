@@ -235,17 +235,22 @@ footer {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .header-content {
         flex-direction: column;
         text-align: center;
     }
 
-    nav ul {
-        flex-direction: column;
-        gap: 10px;
+    .category-list {
+        flex-wrap: wrap;
     }
 
+    .newsletter-form input {
+        width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
     .hero {
         height: 200px;
     }
@@ -257,5 +262,32 @@ footer {
     .footer-content {
         flex-direction: column;
         text-align: center;
+    }
+
+    .newsletter-form input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .newsletter-form button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .category {
+        width: 100%;
+    }
+
+    .newsletter-form input {
+        width: 100%;
+    }
+
+    .newsletter-form button {
+        width: 100%;
     }
 }

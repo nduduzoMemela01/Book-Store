@@ -15,6 +15,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    padding: 20px; /* Add padding for smaller screens */
 }
 
 /* Verification Container */
@@ -25,7 +26,13 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     text-align: center;
     max-width: 400px;
-    width: 90%;
+    width: 100%; /* Full width for smaller screens */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.verification-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
 .verification-container h1 {
@@ -94,6 +101,21 @@ body {
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+    .verification-container {
+        padding: 1.8rem;
+    }
+
+    .verification-container h1 {
+        font-size: 1.9rem;
+    }
+
+    .verification-container button {
+        font-size: 0.95rem;
+        padding: 0.6rem 1.2rem;
+    }
+}
+
 @media (max-width: 768px) {
     .verification-container {
         padding: 1.5rem;
@@ -106,5 +128,32 @@ body {
     .verification-container button {
         font-size: 0.9rem;
         padding: 0.5rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .verification-container {
+        padding: 1.2rem;
+    }
+
+    .verification-container h1 {
+        font-size: 1.6rem;
+    }
+
+    .verification-container p {
+        font-size: 0.9rem;
+    }
+
+    .verification-container .verification-code {
+        font-size: 1.3rem;
+    }
+
+    .verification-container button {
+        font-size: 0.85rem;
+        padding: 0.5rem;
     }
 }

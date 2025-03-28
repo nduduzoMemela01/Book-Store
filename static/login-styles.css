@@ -159,9 +159,9 @@ input[type="text"], input[type="password"], select {
 }
 
 /* Responsive Design */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
     .container {
-        width: 80%;
+        width: 90%;
     }
 
     h2 {
@@ -169,8 +169,23 @@ input[type="text"], input[type="password"], select {
     }
 
     input, select, button {
-        font-size: 1.1rem;
+        font-size: 1rem;
         padding: 12px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        width: 80%;
+    }
+
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    input, select, button {
+        font-size: 0.9rem;
+        padding: 10px;
     }
 }
 
@@ -189,6 +204,7 @@ input[type="text"], input[type="password"], select {
     }
 
     input, select, button {
-        font-size: 1.2rem;
+        font-size: 0.8rem;
+        padding: 8px;
     }
 }
