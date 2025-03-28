@@ -34,20 +34,6 @@ header {
     font-weight: bold;
 }
 
-.search-bar input {
-    padding: 8px;
-    width: 250px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.search-bar input:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-}
-
 nav ul {
     list-style: none;
     display: flex;
@@ -66,228 +52,120 @@ nav ul li a:hover {
     color: #f39c12;
 }
 
-/* Hero Section */
-.hero {
-    background: url('https://source.unsplash.com/1600x900/?books') no-repeat center center/cover;
-    height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
-    position: relative;
-}
-
-.hero::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 1;
-}
-
-.hero-content {
-    position: relative;
-    z-index: 2;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-.hero-content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-}
-
-.btn {
-    background-color: #e74c3c;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    display: inline-block;
-    margin-top: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.btn:hover {
-    background-color: #c0392b;
-    transform: scale(1.05);
-}
-
-/* Categories */
-.categories {
+/* Account, Login, and Signup Sections */
+.account-section, .login-section, .signup-section {
     background-color: white;
-    padding: 30px 0;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
     border-radius: 10px;
-    margin: 20px 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 2rem auto;
+    text-align: center;
 }
 
-.category-list {
+.account-section h2, .login-section h2, .signup-section h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.account-section p, .login-section p, .signup-section p {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+
+.account-section a, .login-section a, .signup-section a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.account-section a:hover, .login-section a:hover, .signup-section a:hover {
+    color: #2980b9;
+}
+
+/* Form Styles */
+form {
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.category {
-    background-color: #3498db;
-    color: white;
-    padding: 15px;
-    border-radius: 5px;
-    width: 200px;
-    text-align: center;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+form label {
+    font-weight: bold;
+    color: #555;
+    text-align: left;
 }
 
-.category:hover {
-    background-color: #2980b9;
-    transform: scale(1.05);
-}
-
-/* Newsletter */
-.newsletter {
-    background-color: #2c3e50;
-    color: white;
-    text-align: center;
-    padding: 30px 0;
-    margin: 20px 0;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.newsletter h2 {
-    margin-bottom: 15px;
-}
-
-.newsletter-form input {
+form input {
     padding: 10px;
-    width: 250px;
-    margin-right: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    font-size: 1rem;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.newsletter-form input:focus {
+form input:focus {
     outline: none;
     border-color: #3498db;
     box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
 }
 
-.newsletter-form button {
-    padding: 10px 15px;
-    background-color: #e74c3c;
+form button {
+    background-color: #3498db;
     color: white;
     border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.newsletter-form button:hover {
-    background-color: #c0392b;
+form button:hover {
+    background-color: #2980b9;
     transform: scale(1.05);
 }
 
-/* Footer */
-footer {
-    background-color: #2c3e50;
-    color: white;
-    padding: 20px 0;
-    text-align: center;
-    margin-top: 20px;
-    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.footer-content {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.footer-section h3 {
-    border-bottom: 2px solid white;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
-}
-
-.footer-section ul {
-    list-style: none;
-    padding: 0;
-}
-
-.footer-section ul li a {
-    color: white;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.footer-section ul li a:hover {
-    color: #f39c12;
-}
-
 /* Responsive Design */
-@media (max-width: 1024px) {
-    .header-content {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .category-list {
-        flex-wrap: wrap;
-    }
-
-    .newsletter-form input {
-        width: 200px;
-    }
-}
-
 @media (max-width: 768px) {
-    .hero {
-        height: 200px;
+    .account-section, .login-section, .signup-section {
+        padding: 1.5rem;
     }
 
-    .category-list {
-        flex-direction: column;
+    .account-section h2, .login-section h2, .signup-section h2 {
+        font-size: 1.8rem;
     }
 
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
+    form input {
+        font-size: 0.9rem;
+        padding: 8px;
     }
 
-    .newsletter-form input {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .newsletter-form button {
-        width: 100%;
+    form button {
+        font-size: 0.9rem;
+        padding: 8px 12px;
     }
 }
 
 @media (max-width: 480px) {
-    .hero-content h1 {
-        font-size: 1.8rem;
+    .account-section, .login-section, .signup-section {
+        padding: 1rem;
     }
 
-    .category {
-        width: 100%;
+    .account-section h2, .login-section h2, .signup-section h2 {
+        font-size: 1.6rem;
     }
 
-    .newsletter-form input {
-        width: 100%;
+    form input {
+        font-size: 0.85rem;
+        padding: 8px;
     }
 
-    .newsletter-form button {
-        width: 100%;
+    form button {
+        font-size: 0.85rem;
+        padding: 8px 10px;
     }
 }
