@@ -38,6 +38,14 @@ h2 {
     font-weight: 600;
 }
 
+/* Style error message */
+.error-message {
+    color: #e74c3c; /* Red color for error messages */
+    font-size: 0.9rem;
+    margin-top: 10px;
+    text-align: center;
+}
+
 /* Input Fields */
 input, select, button {
     font-size: 1rem;

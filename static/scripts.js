@@ -32,10 +32,18 @@ async function login() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({ role, studentNumber, password })
-    }).then(res => {
-        localStorage.setItem('studentNumber', studentNumber);
-        if (res.redirected) {
-            window.location.href = res.url;
+    }).then(async res => {
+        if (res.ok) {
+            localStorage.setItem('studentNumber', studentNumber);
+            if (res.redirected) {
+                window.location.href = res.url;
+            }
+        } else {
+            const errorData = await res.json();
+            document.getElementById('error-message').textContent = errorData.error || 'An error occurred.';
         }
+    }).catch(error => {
+        console.error('Error:', error);
+        document.getElementById('error-message').textContent = 'An error occurred. Please try again.';
     });
 }
