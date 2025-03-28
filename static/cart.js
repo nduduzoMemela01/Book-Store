@@ -34,7 +34,7 @@ async function loadCartFromBackend() {
     console.log("HHHH", studentNumber);
 
     try {
-        const response = await fetch(`http://localhost:5000/getcart?studentNumber=${studentNumber}`);
+        const response = await fetch(`https://studentdut-bookstore.onrender.com/getcart?studentNumber=${studentNumber}`);
         if (!response.ok) {
             throw new Error(`Failed to fetch cart items: ${response.statusText}`);
         }
@@ -53,7 +53,7 @@ async function addToCart(book) {
     const studentNumber = localStorage.getItem("studentNumber").toString(); // Replace with the logged-in user's student number
 
     try {
-        const response = await fetch('http://localhost:5000/addtocart', {
+        const response = await fetch('https://studentdut-bookstore.onrender.com/addtocart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ async function removeFromCart(bookId) {
     const studentNumber = localStorage.getItem("studentNumber").toString(); // Replace with the logged-in user's student number
 
     try {
-        const response = await fetch('http://localhost:5000/removefromcart', {
+        const response = await fetch('https://studentdut-bookstore.onrender.com/removefromcart', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -185,7 +185,7 @@ async function updateCartCount() {
     const studentNumber = localStorage("studentNumber").toString(); // Replace with the logged-in user's student number
 
     try {
-        const response = await fetch(`http://localhost:5000/cartcount?studentNumber=${studentNumber}`);
+        const response = await fetch(`https://studentdut-bookstore.onrender.com/cartcount?studentNumber=${studentNumber}`);
         if (!response.ok) {
             throw new Error(`Failed to fetch cart count: ${response.statusText}`);
         }

@@ -15,7 +15,7 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
 
     try {
         // Send a POST request to the /signup endpoint
-        await fetch('http://localhost:5000/newcheckout', {
+        await fetch('https://studentdut-bookstore.onrender.com/newcheckout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

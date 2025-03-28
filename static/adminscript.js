@@ -14,7 +14,7 @@ document.getElementById('add-book-form').addEventListener('submit', async functi
 
     try {
         // Send a POST request to the /addbook endpoint
-        const response = await fetch('http://localhost:5000/addsbook', {
+        const response = await fetch('https://studentdut-bookstore.onrender.com/addsbook', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ document.getElementById('edit-user-form').addEventListener('submit', async funct
 
     try {
         // Send a PUT request to the /edituser endpoint
-        const response = await fetch('http://localhost:5000/newuser', {
+        const response = await fetch('https://studentdut-bookstore.onrender.com/newuser', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ document.getElementById('edit-user-form').addEventListener('submit', async funct
 // load orders
 async function loadOrders() {
     try {
-        const response = await fetch('http://localhost:5000/loadorders');
+        const response = await fetch('https://studentdut-bookstore.onrender.com/loadorders');
         if (!response.ok) {
             throw new Error('Failed to fetch orders');
         }

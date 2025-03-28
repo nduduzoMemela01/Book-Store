@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Fetch and render books
     async function fetchBooks(queryParams = '') {
         try {
-            const response = await fetch(`http://localhost:5000/loadbooks${queryParams}`);
+            const response = await fetch(`https://studentdut-bookstore.onrender.com/loadbooks${queryParams}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch books');
             }
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.add-to-cart-btn').forEach(button => {
                 button.addEventListener('click', async function () {
                     const bookId = this.getAttribute('data-book-id');
-                    await fetch('http://localhost:5000/addtocart', {
+                    await fetch('https://studentdut-bookstore.onrender.com/addtocart', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ studentNumber: localStorage.getItem('studentNumber').toString(), bookId })

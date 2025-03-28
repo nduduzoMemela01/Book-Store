@@ -26,7 +26,7 @@ async function login() {
     let studentNumber = document.getElementById("studentNumber").value;
     let password = document.getElementById("password").value;
 
-    await fetch("http://localhost:5000/login", {
+    await fetch("login", {
         method: 'POST',
         headers: { 
             "Content-Type": "application/json"
