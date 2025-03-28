@@ -97,7 +97,7 @@ async function loadOrders() {
                 <td>${order.total_amount}</td>
                 <td>${order?.orderedBooks[0].added_at}</td>
                 <td>${order.deliveryaddress}</td>
-                <td>${order.book_titles.map(book => book).join('<br>')}</td>
+                <td>${order.book_titles.map(book => book).join(", ")}</td>
             `;
             orderTableBody.appendChild(row);
         });
