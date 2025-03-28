@@ -61,6 +61,12 @@ nav ul li a:hover {
     max-width: 400px;
     margin: 2rem auto;
     text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.account-section:hover, .login-section:hover, .signup-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .account-section h2, .login-section h2, .signup-section h2 {
@@ -127,6 +133,20 @@ form button {
 form button:hover {
     background-color: #2980b9;
     transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 20px;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+}
+
+footer p {
+    font-size: 0.9rem;
 }
 
 /* Responsive Design */

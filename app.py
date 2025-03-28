@@ -44,6 +44,10 @@ def index():
 def cart():
     return render_template('cart.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/checkout')
 def checkout():
     return render_template('checkoutpage.html')
