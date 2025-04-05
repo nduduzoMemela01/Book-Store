@@ -1,109 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DUT BookHaven</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DUT BookHaven</title>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Link to the theme CSS -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <!-- Header Section -->
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">DUT BookHaven</div>
-                <div class="search-bar">
-                    <input type="text" placeholder="Search for books, authors, or category...">
-                </div>
-                <nav>
-                    <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="/index">Shop</a></li>
-                        <li><a href="/about">about</a></li>
-                        <li><a href="/index">My Account</a></li>
-                        <li><a href ="/index">Login</a></li>
-                        <li><a href ="/signup">Sign Up</a></li>
-                    </ul>
-                </nav>
-            </div>
+  <!-- Header Section -->
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="logo"><i class="fas fa-book-open"></i> DUT BookHaven</div>
+        <div class="search-bar">
+          <input type="text" placeholder="Search for books, authors, or category...">
+          <i class="fas fa-search search-icon"></i>
         </div>
-    </header>
+        <nav>
+          <ul>
+            <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="/index"><i class="fas fa-store"></i> Shop</a></li>
+            <li><a href="/about"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="/index"><i class="fas fa-user"></i> My Account</a></li>
+            <li><a href="/index"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="/signup"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Discover Your Next Great Read</h1>
-                <p>Thousands of books at your fingertips. A chapter a day keeps knowledge decay at bay</p>
-               <a href="/index" class="btn">Shop Now</a>
-            </div>
-        </div>
-    </section>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Discover Your Next Great Read</h1>
+        <p>Thousands of books at your fingertips. A chapter a day keeps knowledge decay at bay.</p>
+        <a href="/index" class="btn"><i class="fas fa-shopping-cart"></i> Shop Now</a>
+      </div>
+    </div>
+  </section>
 
-    <!-- Categories Section -->
-    <section class="categories" id="categories-section">
-        <div class="container">
-            <h2>Browse Categories</h2>
-            <div class="category-list">
-                <div class="category"><h3>Accounting and Informatics</h3></div>
-                <div class="category"><h3>Applied Sciences</h3></div>
-                <div class="category"><h3>Management Sciences</h3></div>
-                <div class="category"><h3>Engineering and the Built Environment</h3></div>
-                <div class="category"><h3>Health Sciences</h3></div>
-                <div class="category"><h3>Arts & Design</h3></div>
-            </div>
-        </div>
-    </section>
+  <!-- Categories Section -->
+  <section class="categories" id="categories-section">
+    <div class="container">
+      <h2><i class="fas fa-layer-group"></i> Browse Categories</h2>
+      <div class="category-list">
+        <div class="category"><i class="fas fa-calculator"></i> <h3>Accounting and Informatics</h3></div>
+        <div class="category"><i class="fas fa-flask"></i> <h3>Applied Sciences</h3></div>
+        <div class="category"><i class="fas fa-chart-line"></i> <h3>Management Sciences</h3></div>
+        <div class="category"><i class="fas fa-cogs"></i> <h3>Engineering and the Built Environment</h3></div>
+        <div class="category"><i class="fas fa-heartbeat"></i> <h3>Health Sciences</h3></div>
+        <div class="category"><i class="fas fa-paint-brush"></i> <h3>Arts & Design</h3></div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Newsletter Section -->
-    <section class="newsletter">
-        <div class="container">
-            <h2>Subscribe to Our Newsletter</h2>
-            <p>Get the latest updates on new releases, sales, and exclusive offers.</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Enter your email address">
-                <button type="submit">Subscribe</button>
-            </form>
-        </div>
-    </section>
+  <!-- Newsletter Section -->
+  <section class="newsletter">
+    <div class="container">
+      <h2><i class="fas fa-envelope-open-text"></i> Subscribe to Our Newsletter</h2>
+      <p>Get the latest updates on new releases, sales, and exclusive offers.</p>
+      <form class="newsletter-form">
+        <input type="email" placeholder="Enter your email address">
+        <button type="submit"><i class="fas fa-paper-plane"></i> Subscribe</button>
+      </form>
+    </div>
+  </section>
 
-    <!-- Footer Section -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>About Us</h3>
-                    <p>DUT BookHaven is an online bookstore dedicated to bringing you the best reading experience and also help you learn more on your journey.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Customer Service</h3>
-                    <ul>
-                        <li><a href="#">Contact Us</a></li>
-                        <li><a href="#">Shipping & Returns</a></li>
-                        <li><a href="#">FAQ</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>My Account</h3>
-                    <ul>
-                        <li><a href="#">Login</a></li>
-                        <li><a href="#">Order History</a></li>
-                        <li><a href="#">Wishlist</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Connect With Us</h3>
-                    <ul>
-                        <li><a href="#">Facebook</a></li>
-                        <li><a href="#">Twitter</a></li>
-                        <li><a href="#">Instagram</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2025 BookHaven. All Rights Reserved.</p>
-            </div>
+  <!-- Footer Section -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3><i class="fas fa-info-circle"></i> About Us</h3>
+          <p>DUT BookHaven is an online bookstore dedicated to bringing you the best reading experience while supporting your journey to knowledge.</p>
         </div>
-    </footer>
+        <div class="footer-section">
+          <h3><i class="fas fa-headset"></i> Customer Service</h3>
+          <ul>
+            <li><a href="#"><i class="fas fa-envelope"></i> Contact Us</a></li>
+            <li><a href="#"><i class="fas fa-box-open"></i> Shipping & Returns</a></li>
+            <li><a href="#"><i class="fas fa-question-circle"></i> FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-user-circle"></i> My Account</h3>
+          <ul>
+            <li><a href="#"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="#"><i class="fas fa-history"></i> Order History</a></li>
+            <li><a href="#"><i class="fas fa-heart"></i> Wishlist</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3><i class="fas fa-share-alt"></i> Connect With Us</h3>
+          <ul>
+            <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+            <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="copyright">
+        <p>&copy; 2025 BookHaven. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

@@ -82,8 +82,9 @@ p {
 
 /* Third Picture Styling */
 .team-member:nth-child(3) img {
-    height: 180px; /* Slightly larger height for the third picture */
-    width: 85%; /* Slightly larger width for the third picture */
+    height: 100%; /* Full height */
+    width: 100%; /* Full width */
+    object-fit: cover; /* Ensure the image scales properly */
 }
 
 .team-member h3 {
@@ -177,8 +178,8 @@ ul li strong {
     }
 
     .team-member:nth-child(3) img {
-        height: 150px; /* Adjusted for mobile devices */
-        width: 80%;
+        height: 100%; /* Full height for mobile devices */
+        width: 100%; /* Full width for mobile devices */
     }
 
     ul li {
