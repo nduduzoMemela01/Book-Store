@@ -83,6 +83,7 @@ async function loadOrders() {
         }
 
         const orders = await response.json();
+        console.log(orders);
         const orderTableBody = document.getElementById('order-table-body');
         orderTableBody.innerHTML = ''; // Clear the table body
 
