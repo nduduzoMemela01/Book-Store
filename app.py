@@ -296,12 +296,18 @@ def load_orders():
             for book in order['orderedBooks']:
                 book_id = book.get('book_id')
                 print(book_id)
-                if book_id:
-                    # Find the book in the books collection
-                    book_data = books.find_one({'book_id': int(book_id)}, {'title': 1, 'price': 1, '_id': 0})
-                    if book_data:
-                        book_titles.append(book_data['title'])
-                        total_amount += book_data['price'] * book.get('quantity', 1)
+                # Skip if book_id is undefined or cannot be converted to int
+                if not book_id or book_id == 'undefined':
+                    continue
+                try:
+                    book_id_int = int(book_id)
+                except (ValueError, TypeError):
+                    continue
+                # Find the book in the books collection
+                book_data = books.find_one({'book_id': book_id_int}, {'title': 1, 'price': 1, '_id': 0})
+                if book_data:
+                    book_titles.append(book_data['title'])
+                    total_amount += book_data['price'] * book.get('quantity', 1)
 
             # Add the book titles to the order
             order['book_titles'] = book_titles
@@ -358,12 +364,12 @@ def load_orders():
 if __name__ == '__main__':
     app.run(debug=True)
 
-    
-    
-    
-    
-    
-    
-    
-    
- 
+
+
+
+
+
+
+
+
+
